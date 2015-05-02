@@ -36,15 +36,20 @@ int main () {
     Point
         *point1;
     Graph
-        *graph, *begin;
+        *graph, *graph2, *begin;
     Radius
         *radius;
     int
-        n;
+        n, t;
     float
-        x, y, minx = 0, maxx = 0, miny = 0, maxy = 0, used;
+        x, y,
+        minx = 0, maxx = 0, miny = 0, maxy = 0,
+        used;
 
     ifstream infile("teste.txt");
+    ofstream outfile("results.txt");
+
+    cout.rdbuf(outfile.rdbuf());
 
     radius = new Radius(0, 0.2);
 
@@ -72,16 +77,25 @@ int main () {
     }
 
     used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
-
+    t = 0;
     while (radius->getRadius() <= used / 2) {
         radius->increase();
-        graph = begin->nextVertice();
+        graph = begin;
+
+        cout << ++t << endl;
         while (graph) {
-            begin->connect(graph, radius);
+            graph2 = graph->nextVertice();
+            while (graph2) {
+                graph->connect(graph2, radius);
+                graph2 = graph2->nextVertice();
+            }
+            graph->printConnected();
+
             graph = graph->nextVertice();
         }
+        cout << "Components: " << begin->components(n) << endl;
     }
-    begin->printConnected();
+
     cout << endl << "Radius: " << radius->getRadius() << endl;
     begin->printAll();
     begin->printDistances();

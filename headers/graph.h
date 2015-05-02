@@ -13,6 +13,13 @@
 #include "../headers/radius.h"
 #endif
 
+#ifndef IOSTREAM_H
+#define IOSTREAM_H
+#include <iostream>
+#endif
+
+using namespace std;
+
 class Graph {
     private:
         int index;
@@ -38,6 +45,8 @@ class Graph {
 
         void Index(float);
 
+        vector<int>* getConnected();
+
         // PRINT
         void print();
 
@@ -53,4 +62,6 @@ class Graph {
         void connect(int);
 
         bool isConnected(int);
+
+        int components (int);
 };

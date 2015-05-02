@@ -52,6 +52,10 @@ Point* Graph::getPoint() {
     return this->point;
 }
 
+vector<int>* Graph::getConnected() {
+    return this->connected;
+}
+
 void Graph::print() {
     cout << "Index:" << this->index << endl << "Points:";
     point->print();
@@ -103,7 +107,33 @@ void Graph::connect(Graph *g, Radius *r) {
     if (it == this->connected->end()) {
         if (this->point->distance(g->getPoint()) / 2 < r->getRadius()) {
             this->connected->push_back(g->Index());
-            g->connect(this->index);
+            //g->connect(this->index);
         }
     }
+}
+
+//Always uses with the begining of the graph
+int Graph::components(int size) {
+    int result = 1;
+    vector<int> vertices;
+    vector<int>::iterator search, test;
+    Graph *g;
+    for (int i = 0; i < size; i++)
+        vertices.push_back(i+1);
+
+    g = this;
+
+    while (g) {
+        for (vector<int>::iterator it = g->getConnected()->begin(); it != g->getConnected()->end(); ++it) {
+            vertices.erase(remove(vertices.begin(), vertices.end(), *it), vertices.end());
+            //search = find (g->getConnected()->begin(), g->getConnected()->end(), *it);
+            //if (search != g->getConnected()->end())
+                //test = search;
+                //vertices.erase(search - 1);
+                //cout << "\t" << "find:" << *search << endl;
+        }
+        g = g->nextVertice();
+    }
+
+    return vertices.size();
 }
