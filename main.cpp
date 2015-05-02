@@ -1,17 +1,25 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAXPOINT 10000
 
 using namespace std;
 
-class Coordinate {
+class Point {
     private:
         int x, y;
 
     public:
-        Coordinate (int x, int y) {
+        Point (int x, int y) {
             this->x = x;
             this->y = y;
         }
-        Coordinate () {
+        Point () {
             this->x = 0;
             this->y = 0;
         }
@@ -20,19 +28,24 @@ class Coordinate {
         void print(void);
 };
 
-void Coordinate::print() {
+void Point::print() {
     cout << "(" << this->x << ", " << this->y << ")" << endl;//("(%d, %d)\n", this.x, this.y);
 }
 
 class Graph {
     private:
         int index;
-        Coordinate point;
+        Point point;
         Graph *next;
 
     public:
-        Graph(int index, Coordinate point) {
+        Graph(int index, Point point) {
             this->point = point;
+            this->index = index;
+        }
+
+        Graph(int index, Point *point) {
+            this->point = *point;
             this->index = index;
         }
 
@@ -40,8 +53,12 @@ class Graph {
             return this->next;
         }
 
+        void addVertice(Graph * newg) {
+            this->next = newg;
+        }
+
         void print() {
-            cout << "Index:" << this->index << endl << "Coordinates:";
+            cout << "Index:" << this->index << endl << "Points:";
             point.print();
             cout << endl;
         }
@@ -49,9 +66,30 @@ class Graph {
 };
 
 int main () {
-    Coordinate point1(1, 1);
-    Graph graph(1, point1);
-    Graph->next = new Graph(2, new Coordinate(2, 2));
-    point1.print();
-    graph.print();
+    Point *point1;
+    Graph *graph, *begin;
+    /*graph->addVertice(new Graph(2, new Point(2, 2)));
+    point1->print();
+    graph->print();
+    graph->nextVertice()->print();*/
+    int n, x, y;
+    string line;
+    ifstream infile("teste.txt");
+
+    n = 0;
+    begin = NULL;
+    while (infile >> x >> y) {
+        if (begin) {
+            graph->addVertice(new Graph(++n, new Point(x,y)));
+            graph = graph->nextVertice();
+            graph->print();
+        }
+        else {
+            begin = new Graph(++n, new Point(x,y));
+            begin->print();
+            graph = begin;
+        }
+        //cout << x << "," << y << endl;
+    }
+    cout << "We have " << n << " points." << endl;
 }
