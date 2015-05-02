@@ -56,23 +56,25 @@ int main () {
     n = 0;
     begin = NULL;
     while (infile >> x >> y) {
-        if (x < minx)
-            minx = x;
-        if (x > maxx)
-            maxx = x;
-        if (y < miny)
-            miny = y;
-        if (y > maxy);
-            maxy = y;
-        if (begin) {
-            graph->addVertice(new Graph(++n, new Point(x,y)));
-            graph = graph->nextVertice();
-            //graph->print();
-        }
-        else {
-            begin = new Graph(++n, new Point(x,y));
-            //begin->print();
-            graph = begin;
+        if (x < MAXPOINT && y < MAXPOINT) {
+            if (x < minx)
+                minx = x;
+            if (x > maxx)
+                maxx = x;
+            if (y < miny)
+                miny = y;
+            if (y > maxy);
+                maxy = y;
+            if (begin) {
+                graph->addVertice(new Graph(++n, new Point(x,y)));
+                graph = graph->nextVertice();
+                //graph->print();
+            }
+            else {
+                begin = new Graph(++n, new Point(x,y));
+                //begin->print();
+                graph = begin;
+            }
         }
     }
 
@@ -82,22 +84,21 @@ int main () {
         radius->increase();
         graph = begin;
 
-        cout << ++t << endl;
         while (graph) {
             graph2 = graph->nextVertice();
             while (graph2) {
                 graph->connect(graph2, radius);
                 graph2 = graph2->nextVertice();
             }
-            graph->printConnected();
-
+            //graph->printConnected();
             graph = graph->nextVertice();
         }
-        cout << "Components: " << begin->components(n) << endl;
+        cout << ++t << ",";
+        begin->printComponents(n);
     }
 
-    cout << endl << "Radius: " << radius->getRadius() << endl;
-    begin->printAll();
-    begin->printDistances();
-    cout << "We have " << n << " points." << endl;
+    //cout << endl << "Radius: " << radius->getRadius() << endl;
+    //begin->printAll();
+    //begin->printDistances();
+    //cout << "We have " << n << " points." << endl;
 }

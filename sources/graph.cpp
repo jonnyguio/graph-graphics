@@ -89,6 +89,10 @@ void Graph::printConnected() {
     cout << endl;
 }
 
+void Graph::printComponents(int size) {
+    cout << this->components(size) << endl;
+}
+
 bool Graph::isConnected(int index) {
     for (vector<int>::iterator it = this->connected->begin(); it != this->connected->end(); ++it) {
         if (*it == index)
@@ -126,11 +130,6 @@ int Graph::components(int size) {
     while (g) {
         for (vector<int>::iterator it = g->getConnected()->begin(); it != g->getConnected()->end(); ++it) {
             vertices.erase(remove(vertices.begin(), vertices.end(), *it), vertices.end());
-            //search = find (g->getConnected()->begin(), g->getConnected()->end(), *it);
-            //if (search != g->getConnected()->end())
-                //test = search;
-                //vertices.erase(search - 1);
-                //cout << "\t" << "find:" << *search << endl;
         }
         g = g->nextVertice();
     }

@@ -56,6 +56,8 @@ class Graph {
 
         void printConnected();
 
+        void printComponents(int);
+
         //CONNECTION
         void connect(Graph*, Radius*);
 
