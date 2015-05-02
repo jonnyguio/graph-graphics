@@ -1,15 +1,15 @@
-#ifndef INCLUDE_GUARD_IOSTREAM
-#define INCLUDE_GUARD_IOSTREAM
+#ifndef IOSTREAM_H
+#define IOSTREAM_H
 #include <iostream>
 #endif
 
-#ifndef INCLUDE_GUARD_MATH
-#define INCLUDE_GUARD_MATH
+#ifndef MATH_H
+#define MATH_H
 #include <math.h>
 #endif
 
-#ifndef INCLUDE_GUARD_POINT
-#define INCLUDE_GUARD_POINT
+#ifndef POINT_H
+#define POINT_H
 #include "../headers/point.h"
 #endif
 

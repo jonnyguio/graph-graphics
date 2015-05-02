@@ -1,6 +1,16 @@
-#ifndef INCLUDE_GUARD_POINT
-#define INCLUDE_GUARD_POINT
+#ifndef POINT_H
+#define POINT_H
 #include "point.h"
+#endif
+
+#ifndef VECTOR_H
+#define VECTOR_H
+#include <vector>
+#endif
+
+#ifndef RADIUS_H
+#define RADIUS_H
+#include "../headers/radius.h"
 #endif
 
 class Graph {
@@ -8,24 +18,39 @@ class Graph {
         int index;
         Point *point;
         Graph *next;
+        std::vector<int> *connected;
 
     public:
         Graph(int, Point);
 
         Graph(int, Point*);
 
-        Graph * nextVertice();
+        // GETTERS AND SETTERS
+        Graph* nextVertice();
 
         void addVertice(Graph*);
 
+        void setPoint(Point*);
+
+        Point* getPoint();
+
+        float Index();
+
+        void Index(float);
+
+        // PRINT
         void print();
 
         void printAll();
 
-        void setPoint(Point*) ;
-
-        Point getPoint();
-
         void printDistances();
 
+        void printConnected();
+
+        //CONNECTION
+        void connect(Graph*, Radius*);
+
+        void connect(int);
+
+        bool isConnected(int);
 };
