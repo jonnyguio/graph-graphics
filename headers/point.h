@@ -1,9 +1,16 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+#include <vector>
+#endif
+
+using namespace std;
+
 class Point {
     private:
-        float x, y;
+        vector<int> *coordinates;
 
     public:
-        Point (float, float);
+        Point (vector<int>*);
         Point ();
 
     public:
@@ -11,11 +18,10 @@ class Point {
 
         float distance(Point*);
 
-        float X();
+        vector<int>* Coordinates();
 
-        float Y();
+        //void Coordinates(int, int);
 
-        void X(float x);
+        void Coordinates(vector<int>*);
 
-        void Y(float y);
 };

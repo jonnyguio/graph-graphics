@@ -66,12 +66,12 @@ int main () {
             if (y > maxy);
                 maxy = y;
             if (begin) {
-                graph->addVertice(new Graph(++n, new Point(x,y)));
+                graph->addVertice(new Graph(++n, new Point(new vector<int>(x, y))));
                 graph = graph->nextVertice();
                 //graph->print();
             }
             else {
-                begin = new Graph(++n, new Point(x,y));
+                begin = new Graph(++n, new Point(new vector<int>(x, y)));
                 //begin->print();
                 graph = begin;
             }
