@@ -46,8 +46,6 @@ int main () {
         minx = 0, maxx = 0, miny = 0, maxy = 0,
         used;
 
-    vector<float>* point;
-
     ifstream infile("teste.txt");
     ofstream outfile("results.txt");
 
@@ -68,18 +66,12 @@ int main () {
             if (y > maxy);
                 maxy = y;
             if (begin) {
-                point = new vector<float>();
-                point->push_back(x);
-                point->push_back(y);
-                graph->addVertice(new Graph(++n, new Point(point)));
+                graph->addVertice(new Graph(++n, new Point(new vector<int>(x, y))));
                 graph = graph->nextVertice();
                 //graph->print();
             }
             else {
-                point = new vector<float>();
-                point->push_back(x);
-                point->push_back(y);
-                begin = new Graph(++n, new Point(point));
+                begin = new Graph(++n, new Point(new vector<int>(x, y)));
                 //begin->print();
                 graph = begin;
             }

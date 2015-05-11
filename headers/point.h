@@ -7,11 +7,10 @@ using namespace std;
 
 class Point {
     private:
-        vector<float> *coordinates;
+        vector<int> *coordinates;
 
     public:
-        Point (vector<float>*);
-        Point (vector<float>);
+        Point (vector<int>*);
         Point ();
 
     public:
@@ -19,10 +18,10 @@ class Point {
 
         float distance(Point*);
 
-        vector<float>* Coordinates();
+        vector<int>* Coordinates();
 
         //void Coordinates(int, int);
 
-        void Coordinates(vector<float>*);
+        void Coordinates(vector<int>*);
 
 };
