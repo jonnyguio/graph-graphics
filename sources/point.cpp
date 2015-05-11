@@ -20,23 +20,27 @@
 
 using namespace std;
 
-Point::Point (vector<int> *input) {
+Point::Point (vector<float> *input) {
     this->coordinates = input;
 }
 
-Point::Point () {
-    this->coordinates = new vector<int>();
+Point::Point (vector<float> input) {
+    this->coordinates = &input;
 }
 
-vector<int>* Point::Coordinates() {return this->coordinates;}
+Point::Point () {
+    this->coordinates = new vector<float>();
+}
+
+vector<float>* Point::Coordinates() {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}
 
-void Point::Coordinates(vector<int> *input) {this->coordinates = input;}
+void Point::Coordinates(vector<float> *input) {this->coordinates = input;}
 
 void Point::print() {
     cout << "(";
-    for (vector<int>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
+    for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
         cout << (it==this->coordinates->begin())?"":", ";
     }
     cout << ")" << endl;//("(%d, %d)\n", this.x, this.y);
@@ -44,7 +48,7 @@ void Point::print() {
 
 float Point::distance(Point *p2) {
     float sum=0;
-    vector<int>::iterator it, it2;
+    vector<float>::iterator it, it2;
     for (it2 = p2->Coordinates()->begin(), it = this->coordinates->begin(); it != this->coordinates->end(); ++it, ++it2)
         sum += pow(*it2 - *it, 2);
     return
