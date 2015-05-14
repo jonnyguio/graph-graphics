@@ -1,22 +1,7 @@
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
 #include <iostream>
-#endif
-
-#ifndef MATH_H
-#define MATH_H
-#include <math.h>
-#endif
-
-#ifndef POINT_H
-#define POINT_H
-#include "../headers/point.h"
-#endif
-
-#ifndef VECTOR_H
-#define VECTOR_H
+#include <cmath>
 #include <vector>
-#endif
+#include "../headers/point.h"
 
 using namespace std;
 

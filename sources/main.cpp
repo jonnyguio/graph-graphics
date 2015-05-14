@@ -1,32 +1,13 @@
 #include <fstream>
 #include <sstream>
-#include <string>
-#include <string.h>
-
-#ifndef MATH_H
-#define MATH_H
-#include <math.h>
-#endif
-
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
-#include <iostream>
-#endif
-
-#ifndef GRAPH_H
-#define GRAPH_H
-#include "../headers/graph.h"
-#endif
-
-#ifndef RADIUS_H
-#define RADIUS_H
-#include "../headers/radius.h"
-#endif
-
-#ifndef VECTOR_H
-#define VECTOR_H
 #include <vector>
-#endif
+#include <ctime>
+#include <cmath>
+#include <iostream>
+
+#include "../headers/graph.h"
+
+#include "../headers/radius.h"
 
 #define MAXPOINT 10000
 
@@ -40,11 +21,13 @@ int main () {
     Radius
         *radius;
     int
-        n, t;
+        n, t, potency;
     float
         x, y,
         minx = 0, maxx = 0, miny = 0, maxy = 0,
         used;
+
+    clock_t start, end;
 
     vector<float>* point;
 
@@ -53,6 +36,7 @@ int main () {
 
     cout.rdbuf(outfile.rdbuf());
 
+    start = clock();
     radius = new Radius(0, 0.2);
 
     n = 0;
@@ -88,6 +72,7 @@ int main () {
 
     used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
     t = 0;
+    potency = 0;
     while (radius->getRadius() <= used / 2) {
         radius->increase();
         graph = begin;
@@ -101,9 +86,17 @@ int main () {
             //graph->printConnected();
             graph = graph->nextVertice();
         }
+        /*++t;
+        if (t % (int) pow(10,potency) == 0) {
+            cout << t << endl;
+            potency++;
+        }*/
         cout << ++t << ",";
         begin->printComponents(n);
     }
+
+    end = clock();
+    cout << (double) (end - start) / CLOCKS_PER_SEC << endl;
 
     //cout << endl << "Radius: " << radius->getRadius() << endl;
     //begin->printAll();

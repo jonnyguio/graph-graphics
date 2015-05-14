@@ -1,15 +1,6 @@
-#ifndef GRAPH_H
-#define GRAPH_H
 #include "../headers/graph.h"
-#endif
-
-#include <stdlib.h>
-
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
+#include <cstdlib>
 #include <iostream>
-#endif
-
 #include <algorithm>
 
 using namespace std;

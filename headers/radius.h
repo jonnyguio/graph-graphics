@@ -1,3 +1,5 @@
+#ifndef _RADIUS_H_
+#define _RADIUS_H_
 class Radius {
     private:
         float radius;
@@ -18,3 +20,4 @@ class Radius {
 
         bool isTouching();
 };
+#endif

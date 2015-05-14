@@ -1,7 +1,4 @@
-#ifndef RADIUS_H
-#define RADIUS_H
 #include "../headers/radius.h"
-#endif
 
 Radius::Radius() {
     this->radius = 0;

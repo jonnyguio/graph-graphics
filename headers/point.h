@@ -1,8 +1,7 @@
-#ifndef VECTOR_H
-#define VECTOR_H
 #include <vector>
-#endif
 
+#ifndef _POINT_H_
+#define _POINT_H_
 using namespace std;
 
 class Point {
@@ -26,3 +25,4 @@ class Point {
         void Coordinates(vector<float>*);
 
 };
+#endif

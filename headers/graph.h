@@ -1,23 +1,10 @@
-#ifndef POINT_H
-#define POINT_H
 #include "point.h"
-#endif
-
-#ifndef VECTOR_H
-#define VECTOR_H
 #include <vector>
-#endif
-
-#ifndef RADIUS_H
-#define RADIUS_H
-#include "../headers/radius.h"
-#endif
-
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
 #include <iostream>
-#endif
+#include "radius.h"
 
+#ifndef _GRAPH_H_
+#define _GRAPH_H_
 using namespace std;
 
 class Graph {
@@ -67,3 +54,4 @@ class Graph {
 
         int components (int);
 };
+#endif
