@@ -17,6 +17,14 @@ Point::Point () {
     this->coordinates = new vector<float>();
 }
 
+void Point::Index(int index) {
+    this->index = index;
+}
+
+int Point::Index() {
+    return this->index;
+}
+
 vector<float>* Point::Coordinates() {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}
@@ -24,11 +32,20 @@ vector<float>* Point::Coordinates() {return this->coordinates;}
 void Point::Coordinates(vector<float> *input) {this->coordinates = input;}
 
 void Point::print() {
+    /*cout << "(";
+    for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
+        cout << (it==this->coordinates->begin())?"":", ";
+    }
+    cout << ")" << endl;//("(%d, %d)\n", this.x, this.y);*/
+    cout << index << endl;
+}
+
+void Point::printCoordinates() {
     cout << "(";
     for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
         cout << (it==this->coordinates->begin())?"":", ";
     }
-    cout << ")" << endl;//("(%d, %d)\n", this.x, this.y);
+    cout << ")" << endl;
 }
 
 float Point::distance(Point *p2) {

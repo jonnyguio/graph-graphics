@@ -1,4 +1,5 @@
 #include "point.h"
+#include "edge.h"
 #include <vector>
 #include <iostream>
 #include "radius.h"
@@ -9,35 +10,37 @@ using namespace std;
 
 class Graph {
     private:
-        int index;
-        Point *point;
-        Graph *next;
-        std::vector<int> *connected;
+        int
+            cc, index;
+
+        vector<Point> *points;
+        vector<Edge> *edges;
+
+        bool hasConnected;
 
     public:
-        Graph(int, Point);
+        Graph(int, vector<Point>, vector<Edge>);
 
-        Graph(int, Point*);
+        Graph(int, *vector<Point>, *vector<Edge>);
 
         // GETTERS AND SETTERS
-        Graph* nextVertice();
+        vector<Point>* getVertices(void);
 
-        void addVertice(Graph*);
+        void addVertice(Point*);
 
-        void setPoint(Point*);
+        vector<Edge>* getEdges(void);
 
-        Point* getPoint();
+        void addEdge(Edge*);
 
-        float Index();
+        float Index(void);
 
         void Index(float);
 
-        vector<int>* getConnected();
+        bool HasConnected(void);
+
+        void HasConnected(bool);
 
         // PRINT
-        void print();
-
-        void printAll();
 
         void printDistances();
 
@@ -46,11 +49,7 @@ class Graph {
         void printComponents(int);
 
         //CONNECTION
-        void connect(Graph*, Radius*);
-
-        void connect(int);
-
-        bool isConnected(int);
+        void connect(Radius*);
 
         int components (int);
 };

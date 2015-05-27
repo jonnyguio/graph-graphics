@@ -27,9 +27,11 @@ int main () {
         minx = 0, maxx = 0, miny = 0, maxy = 0,
         used;
 
-    clock_t start, end;
+    clock_t
+        start, end;
 
-    vector<float>* point;
+    vector<float>*
+        point;
 
     ifstream infile("teste.txt");
     ofstream outfile("results.txt");
@@ -37,7 +39,6 @@ int main () {
     cout.rdbuf(outfile.rdbuf());
 
     start = clock();
-    radius = new Radius(0, 0.2);
 
     n = 0;
     begin = NULL;
@@ -73,6 +74,9 @@ int main () {
     used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
     t = 0;
     potency = 0;
+    start = clock();
+    radius = new Radius(0, 0.2);
+    
     while (radius->getRadius() <= used / 2) {
         radius->increase();
         graph = begin;

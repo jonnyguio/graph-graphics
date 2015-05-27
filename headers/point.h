@@ -7,14 +7,21 @@ using namespace std;
 class Point {
     private:
         vector<float> *coordinates;
+        int index;
 
     public:
-        Point (vector<float>*);
-        Point (vector<float>);
+        Point (int, vector<float>*);
+        Point (int, vector<float>);
         Point ();
 
     public:
+        void Index(int);
+
+        int Index();
+
         void print(void);
+
+        void printCoordinates(void);
 
         float distance(Point*);
 

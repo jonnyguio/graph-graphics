@@ -5,26 +5,32 @@
 
 using namespace std;
 
-Graph::Graph(int index, Point point) {
-    this->point = &point;
+Graph::Graph(int index, vector<Point> points, vector<Edge> edges) {
+    this->points = &points;
+    this->edges = &edges;
     this->index = index;
-    this->next = NULL;
-    this->connected = new vector<int>();
 }
 
-Graph::Graph(int index, Point *point) {
-    this->point = point;
+Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
+    this->points = points;
+    this->edges = edges;
     this->index = index;
-    this->next = NULL;
-    this->connected = new vector<int>();
 }
 
-Graph* Graph::nextVertice() {
-    return this->next;
+vector<Point>* Graph::getVertices() {
+    return this->points;
 }
 
-void Graph::addVertice(Graph * newg) {
-    this->next = newg;
+void Graph::addVertice(Point *point) {
+    this->points->push_back(point);
+}
+
+vector<Edge>* Graph::getEdges() {
+    return this->edges;
+}
+
+void Graph::addEdge(Edge* edge) {
+    this->edges->push_back(edge);
 }
 
 void Graph::Index(float index) {
@@ -35,68 +41,28 @@ float Graph::Index() {
     return this->index;
 }
 
-void Graph::setPoint(Point *p) {
-    this->point = p;
+void HasConnected(bool state) {
+    this->hasConnected = state;
 }
 
-Point* Graph::getPoint() {
-    return this->point;
-}
-
-vector<int>* Graph::getConnected() {
-    return this->connected;
-}
-
-void Graph::print() {
-    cout << "Index:" << this->index << endl << "Points:";
-    point->print();
-    cout << endl;
+bool HasConnected() {
+    return this->hasConnected;
 }
 
 void Graph::printAll() {
-    Graph *g;
-    g = this;
-    while (g) {
-        g->print();
-        g = g->next;
+    for (vector<Edge>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
+        (*it).print();
     }
 }
 
 void Graph::printDistances() {
-    Graph *g;
-    g = this->next;
-    cout << "Index: " << this->index << endl;
-    while (g) {
-        cout << "\t" << "Distance to Index " << g->index << ": " << this->point->distance(g->point) << endl;
-        g = g->next;
+    for (vector<Edge>::iterator it = this->edges->begin(); it !+ this->edges->end(); ++it) {
+        (*it).print();
+        cout << "Distance:" << (*it).distance() << endl;
     }
 }
-
-void Graph::printConnected() {
-    cout << "[" << this->index << "] Indexes connected:";
-    for (vector<int>::iterator it = this->connected->begin(); it != this->connected->end(); ++it) {
-        cout << " " << *it ;
-    }
-    cout << endl;
-}
-
-void Graph::printComponents(int size) {
-    cout << this->components(size) << endl;
-}
-
-bool Graph::isConnected(int index) {
-    for (vector<int>::iterator it = this->connected->begin(); it != this->connected->end(); ++it) {
-        if (*it == index)
-            return true;
-    }
-    return false;
-}
-
-void Graph::connect(int index) {
-    this->connected->push_back(index);
-}
-
-void Graph::connect(Graph *g, Radius *r) {
+/*
+void Graph::connect(Radius *r) {
     vector<int>::iterator it;
     it = find (this->connected->begin(), this->connected->end(), g->Index());
     if (it == this->connected->end()) {
@@ -126,4 +92,4 @@ int Graph::components(int size) {
     }
 
     return vertices.size();
-}
+}*/
