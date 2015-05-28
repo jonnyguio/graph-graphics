@@ -14,14 +14,25 @@
 using namespace std;
 
 int main () {
+
+    vector<Point*>
+        *points;
+
+    vector<float>
+        *point;
+
     Point
         *point1;
+
     Graph
         *graph, *graph2, *begin;
+
     Radius
         *radius;
+
     int
         n, t, potency;
+
     float
         x, y,
         minx = 0, maxx = 0, miny = 0, maxy = 0,
@@ -30,13 +41,10 @@ int main () {
     clock_t
         start, end;
 
-    vector<float>*
-        point;
-
     ifstream infile("teste.txt");
     ofstream outfile("results.txt");
 
-    cout.rdbuf(outfile.rdbuf());
+    //cout.rdbuf(outfile.rdbuf());
 
     start = clock();
 
@@ -52,31 +60,33 @@ int main () {
                 miny = y;
             if (y > maxy);
                 maxy = y;
-            if (begin) {
+            if (graph) {
                 point = new vector<float>();
                 point->push_back(x);
                 point->push_back(y);
-                graph->addVertice(new Graph(++n, new Point(point)));
-                graph = graph->nextVertice();
+                graph->addVertice(new Point(++n, point));
                 //graph->print();
             }
             else {
                 point = new vector<float>();
                 point->push_back(x);
                 point->push_back(y);
-                begin = new Graph(++n, new Point(point));
+                points = new vector<Point*>();
+                points->push_back(new Point(++n, point));
+                graph = new Graph(1, points);
                 //begin->print();
-                graph = begin;
             }
         }
     }
 
+    graph->print();
+/*
     used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
     t = 0;
     potency = 0;
     start = clock();
     radius = new Radius(0, 0.2);
-    
+
     while (radius->getRadius() <= used / 2) {
         radius->increase();
         graph = begin;
@@ -94,13 +104,13 @@ int main () {
         if (t % (int) pow(10,potency) == 0) {
             cout << t << endl;
             potency++;
-        }*/
+        }
         cout << ++t << ",";
         begin->printComponents(n);
     }
-
+*/
     end = clock();
-    cout << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    cout << endl << endl << endl << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 
     //cout << endl << "Radius: " << radius->getRadius() << endl;
     //begin->printAll();

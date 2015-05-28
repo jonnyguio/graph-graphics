@@ -2,22 +2,29 @@
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
-Graph::Graph(int index, vector<Point> points, vector<Edge> edges) {
+Graph::Graph(int index, vector<Point*> *points) {
+    this->points = points;
+    this->edges = new vector<Edge*>();
+    this->index = index;
+}
+
+Graph::Graph(int index, vector<Point*> points, vector<Edge*> edges) {
     this->points = &points;
     this->edges = &edges;
     this->index = index;
 }
 
-Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
+Graph::Graph(int index, vector<Point*> *points, vector<Edge*>* edges) {
     this->points = points;
     this->edges = edges;
     this->index = index;
 }
 
-vector<Point>* Graph::getVertices() {
+vector<Point*>* Graph::getVertices() {
     return this->points;
 }
 
@@ -25,7 +32,7 @@ void Graph::addVertice(Point *point) {
     this->points->push_back(point);
 }
 
-vector<Edge>* Graph::getEdges() {
+vector<Edge*>* Graph::getEdges() {
     return this->edges;
 }
 
@@ -41,24 +48,40 @@ float Graph::Index() {
     return this->index;
 }
 
-void HasConnected(bool state) {
+void Graph::HasConnected(bool state) {
     this->hasConnected = state;
 }
 
-bool HasConnected() {
+bool Graph::HasConnected() {
     return this->hasConnected;
 }
 
-void Graph::printAll() {
-    for (vector<Edge>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
-        (*it).print();
+void Graph::print() {
+
+    cout << "Vertices:" << endl;
+
+    for (vector<Point*>::iterator it = this->points->begin(); it != this->points->end(); ++it)
+    {
+        cout << (*it)->Index() << " ";
+    }
+
+    cout << endl << endl << "Edges:" << endl;
+
+    for (vector<Edge*>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
+        (*it)->print();
     }
 }
 
-void Graph::printDistances() {
-    for (vector<Edge>::iterator it = this->edges->begin(); it !+ this->edges->end(); ++it) {
+/*void Graph::printDetails() {
+    for (vector<Edge>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
         (*it).print();
-        cout << "Distance:" << (*it).distance() << endl;
+    }
+}*/
+
+void Graph::printDistances() {
+    for (vector<Edge*>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
+        (*it)->print();
+        cout << "Distance:" << (*it)->distance() << endl;
     }
 }
 /*

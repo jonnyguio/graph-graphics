@@ -21,7 +21,7 @@ Edge::Edge (Point a, Point b) {
 }
 
 void Edge::print() {
-    cout << "Aresta: (" << this->a->Index() << ", " << this->b->Index() << ")" << endl;
+    cout << "\t(" << this->a->Index() << ", " << this->b->Index() << ")" << endl;
     //this->a->print();
     //this->b->print();
 }
@@ -36,3 +36,5 @@ float Edge::distance() {
     return
         sqrt(sum);
 }
+
+template class vector<Edge>;

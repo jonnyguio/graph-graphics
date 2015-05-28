@@ -5,12 +5,14 @@
 
 using namespace std;
 
-Point::Point (vector<float> *input) {
+Point::Point (int index, vector<float> *input) {
     this->coordinates = input;
+    this->index = index;
 }
 
-Point::Point (vector<float> input) {
+Point::Point (int index, vector<float> input) {
     this->coordinates = &input;
+    this->index = index;
 }
 
 Point::Point () {
@@ -56,3 +58,5 @@ float Point::distance(Point *p2) {
     return
         sqrt(sum);
 }
+
+template class vector<Point>;

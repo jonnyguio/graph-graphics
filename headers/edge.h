@@ -1,4 +1,5 @@
 #include <vector>
+#include "point.h"
 
 #ifndef _EDGE_H_
 #define _EDGE_H_
@@ -16,7 +17,7 @@ class Edge {
     public:
         void print(void);
 
-        int distance(void);
+        float distance(void);
 
 };
 #endif
