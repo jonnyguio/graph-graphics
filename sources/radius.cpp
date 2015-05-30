@@ -25,3 +25,7 @@ float Radius::Rate() {
 void Radius::Rate(float rate) {
     this->rate = rate;
 }
+
+float lerp(float t, Point *a, Point *b) {
+
+}

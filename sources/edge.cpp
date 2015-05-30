@@ -20,6 +20,26 @@ Edge::Edge (Point a, Point b) {
     this->b = &b;
 }
 
+Point* Edge::A() const {
+    return this->a;
+}
+
+void Edge::A(Point *a) {
+    this->a = a;
+}
+
+Point* Edge::B() const {
+    return this->b;
+}
+
+void Edge::B(Point *b) {
+    this->b = b;
+}
+
+bool Edge::operator==(const Edge& e) {
+    return (this->a == e.A() && this->b == e.B());
+}
+
 void Edge::print() {
     cout << "\t(" << this->a->Index() << ", " << this->b->Index() << ")" << endl;
     //this->a->print();

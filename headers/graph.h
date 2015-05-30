@@ -13,28 +13,28 @@ class Graph {
         int
             cc, index;
 
-        vector<Point*>
+        vector<Point>
             *points;
 
-        vector<Edge*>
+        vector<Edge>
             *edges;
 
         bool
             hasConnected;
 
     public:
-        Graph(int, vector<Point*>, vector<Edge*>);
+        Graph(int, vector<Point>, vector<Edge>);
 
-        Graph(int, vector<Point*>*, vector<Edge*>*);
+        Graph(int, vector<Point>*, vector<Edge>*);
 
-        Graph(int, vector<Point*>*);
+        Graph(int, vector<Point>*);
 
         // GETTERS AND SETTERS
-        vector<Point*>* getVertices(void);
+        vector<Point>* getVertices(void);
 
         void addVertice(Point*);
 
-        vector<Edge*>* getEdges(void);
+        vector<Edge>* getEdges(void);
 
         void addEdge(Edge*);
 
@@ -57,8 +57,8 @@ class Graph {
         void printComponents(int);
 
         //CONNECTION
-        void connect(Radius*);
+        void connect(Radius*, Point*, Point*);
 
-        int components (int);
+        int components ();
 };
 #endif

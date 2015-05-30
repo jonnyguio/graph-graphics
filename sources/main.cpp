@@ -15,7 +15,7 @@ using namespace std;
 
 int main () {
 
-    vector<Point*>
+    vector<Point>
         *points;
 
     vector<float>
@@ -25,13 +25,13 @@ int main () {
         *point1;
 
     Graph
-        *graph, *graph2, *begin;
+        *graph = NULL, *graph2, *begin;
 
     Radius
         *radius;
 
     int
-        n, t, potency;
+        n, t, i, j;
 
     float
         x, y,
@@ -41,10 +41,15 @@ int main () {
     clock_t
         start, end;
 
+    streambuf
+        *backup, *out;
+
     ifstream infile("teste.txt");
     ofstream outfile("results.txt");
 
-    //cout.rdbuf(outfile.rdbuf());
+    backup = cout.rdbuf();
+    out = outfile.rdbuf();
+    cout.rdbuf(out);
 
     start = clock();
 
@@ -71,8 +76,8 @@ int main () {
                 point = new vector<float>();
                 point->push_back(x);
                 point->push_back(y);
-                points = new vector<Point*>();
-                points->push_back(new Point(++n, point));
+                points = new vector<Point>();
+                points->push_back(*(new Point(++n, point)));
                 graph = new Graph(1, points);
                 //begin->print();
             }
@@ -80,37 +85,30 @@ int main () {
     }
 
     graph->print();
-/*
+
     used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
     t = 0;
-    potency = 0;
     start = clock();
     radius = new Radius(0, 0.2);
 
     while (radius->getRadius() <= used / 2) {
         radius->increase();
-        graph = begin;
 
-        while (graph) {
-            graph2 = graph->nextVertice();
-            while (graph2) {
-                graph->connect(graph2, radius);
-                graph2 = graph2->nextVertice();
+        i = 0;
+        for (vector<Point>::iterator it = graph->getVertices()->begin(); it != graph->getVertices()->end(); ++it) {
+            for (vector<Point>::iterator it2 = graph->getVertices()->begin() + ++i; it2 != graph->getVertices()->end(); ++it2) {
+                graph->connect(radius, &(*it), &(*it2));
             }
-            //graph->printConnected();
-            graph = graph->nextVertice();
         }
-        /*++t;
-        if (t % (int) pow(10,potency) == 0) {
-            cout << t << endl;
-            potency++;
-        }
-        cout << ++t << ",";
-        begin->printComponents(n);
+        cout << ++t << ": ";
+        cout << graph->components();
+        cout << endl;
+        //graph->print();
     }
-*/
+
     end = clock();
-    cout << endl << endl << endl << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    cout.rdbuf(backup);
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 
     //cout << endl << "Radius: " << radius->getRadius() << endl;
     //begin->printAll();

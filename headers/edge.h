@@ -6,6 +6,7 @@
 using namespace std;
 
 class Edge {
+
     private:
         Point *a, *b;
 
@@ -19,5 +20,14 @@ class Edge {
 
         float distance(void);
 
+        Point* A() const;
+
+        void A(Point*);
+
+        Point* B() const;
+
+        void B(Point*);
+
+        bool operator==(const Edge&);
 };
 #endif
