@@ -16,6 +16,7 @@ float Radius::getRadius() {
 
 float Radius::increase() {
     this->radius += this->rate;
+    return this->radius;
 }
 
 float Radius::Rate() {
@@ -24,8 +25,4 @@ float Radius::Rate() {
 
 void Radius::Rate(float rate) {
     this->rate = rate;
-}
-
-float lerp(float t, Point *a, Point *b) {
-
 }

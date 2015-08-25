@@ -42,7 +42,11 @@ vector<Edge>* Graph::getEdges() {
 }
 
 void Graph::setEdges(vector<Edge>* edges) {
+<<<<<<< HEAD
     this->edges = edges;
+=======
+    this->edges = edge;
+>>>>>>> origin/master
 }
 
 void Graph::addEdge(Edge* edge) {
@@ -190,4 +194,31 @@ void Graph::setTriangles() {
 			}
 		}
 	}
+}
+
+graph* copy(graph* g1){
+  graph* temp;
+  temp = (graph*) malloc(sizeof(graph));
+  temp->setVertices(g1->getVertices());
+  temp->setEdges(g1->getEdges());
+  temp->Index(g1->Index());
+  return temp;
+}
+
+void Graph::collapse(graph g1, int dimension){
+  graph* g2;
+  g2 = copy(g1);
+  F
+  ace fTemp = new Face();
+  if(dimension == 2){
+    while(g2->getFaces().size() > 0){
+      while(freeMember(g2, 2)){
+
+      }
+    }
+  }
+  while(){
+
+  }
+
 }

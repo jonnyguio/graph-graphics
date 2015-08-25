@@ -22,7 +22,7 @@ int main () {
         *point;
 
     Graph
-        *graph = NULL, *begin;
+        *graph = NULL;
 
     Radius
         *radius;
@@ -51,7 +51,7 @@ int main () {
     start = clock();
 
     n = 0;
-    begin = NULL;
+    //begin = NULL;
     while (infile >> x >> y) {
         if (x < MAXPOINT && y < MAXPOINT) {
             if (x < minx)
