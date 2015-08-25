@@ -29,12 +29,20 @@ vector<Point>* Graph::getVertices() {
     return this->points;
 }
 
+void Graph::setVertices(vector<Point>* points) {
+    this->points = points;
+}
+
 void Graph::addVertice(Point *point) {
     this->points->push_back(*point);
 }
 
 vector<Edge>* Graph::getEdges() {
     return this->edges;
+}
+
+void Graph::setEdges(vector<Edge>* edges) {
+    this->edges = edge;
 }
 
 void Graph::addEdge(Edge* edge) {
@@ -108,7 +116,6 @@ void Graph::connect(Radius *r, Point *a, Point *b) {
 //Always uses with the begining of the graph
 int Graph::components() {
 
-    int result = 1;
     vector<int> vertices;
     vector<int>::iterator search, test;
 
@@ -122,4 +129,31 @@ int Graph::components() {
     }
 
     return vertices.size();
+}
+
+graph* copy(graph* g1){
+  graph* temp;
+  temp = (graph*) malloc(sizeof(graph));
+  temp->setVertices(g1->getVertices());
+  temp->setEdges(g1->getEdges());
+  temp->Index(g1->Index());
+  return temp;
+}
+
+void Graph::collapse(graph g1, int dimension){
+  graph* g2;
+  g2 = copy(g1);
+  F
+  ace fTemp = new Face();
+  if(dimension == 2){
+    while(g2->getFaces().size() > 0){
+      while(freeMember(g2, 2)){
+
+      }
+    }
+  }
+  while(){
+
+  }
+
 }

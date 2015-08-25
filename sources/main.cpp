@@ -21,17 +21,14 @@ int main () {
     vector<float>
         *point;
 
-    Point
-        *point1;
-
     Graph
-        *graph = NULL, *graph2, *begin;
+        *graph = NULL;
 
     Radius
         *radius;
 
     int
-        n, t, i, j;
+        n, t, i;
 
     float
         x, y,
@@ -54,7 +51,7 @@ int main () {
     start = clock();
 
     n = 0;
-    begin = NULL;
+    //begin = NULL;
     while (infile >> x >> y) {
         if (x < MAXPOINT && y < MAXPOINT) {
             if (x < minx)

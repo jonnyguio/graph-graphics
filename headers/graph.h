@@ -32,9 +32,13 @@ class Graph {
         // GETTERS AND SETTERS
         vector<Point>* getVertices(void);
 
+        void setVertices(vector<Point>*);
+
         void addVertice(Point*);
 
         vector<Edge>* getEdges(void);
+
+        void setEdges(vector<Edge>*);
 
         void addEdge(Edge*);
 
@@ -60,5 +64,8 @@ class Graph {
         void connect(Radius*, Point*, Point*);
 
         int components ();
+
+        //Collapse
+        void collapse(graph, int);
 };
 #endif
