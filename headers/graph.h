@@ -36,8 +36,6 @@ class Graph {
         // GETTERS AND SETTERS
         vector<Point>* getVertices(void);
 
-        void setVertices(vector<Point>*);
-
         void addVertice(Point*);
 
         void setVertices(vector<Point>*);
@@ -47,8 +45,6 @@ class Graph {
         void setEdges(vector<Edge>*);
 
         void addEdge(Edge*);
-
-        void setEdges(vector<Edge>*);
 
         float Index(void);
 
@@ -73,16 +69,13 @@ class Graph {
 
         int components ();
 
-<<<<<<< HEAD
         // TRIANGLES
         void setTriangles();
 
         bool formsTri(Edge *, Edge *, Edge *);
 
         bool findInt(vector<unsigned long>, unsigned long, int);
-=======
         //Collapse
         void collapse(graph, int);
->>>>>>> origin/master
 };
 #endif
