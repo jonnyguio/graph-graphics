@@ -8,14 +8,20 @@ using namespace std;
 class Edge {
 
     private:
-        Point *a, *b;
+        Point
+            *a, *b;
+        int
+            index;
 
     public:
         Edge (Point *, Point *);
         Edge (Point, Point);
         Edge ();
 
-    public:
+        void Index(int);
+
+        int Index(void);
+
         void print(void);
 
         float distance(void);

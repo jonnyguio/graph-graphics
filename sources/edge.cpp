@@ -20,6 +20,14 @@ Edge::Edge (Point a, Point b) {
     this->b = &b;
 }
 
+void Edge::Index(int index) {
+    this->index = index;
+}
+
+int Edge::Index() {
+    return this->index;
+}
+
 Point* Edge::A() const {
     return this->a;
 }

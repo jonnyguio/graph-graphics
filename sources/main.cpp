@@ -21,17 +21,14 @@ int main () {
     vector<float>
         *point;
 
-    Point
-        *point1;
-
     Graph
-        *graph = NULL, *graph2, *begin;
+        *graph = NULL, *begin;
 
     Radius
         *radius;
 
     int
-        n, t, i, j;
+        n, t, i;
 
     float
         x, y,
@@ -63,7 +60,7 @@ int main () {
                 maxx = x;
             if (y < miny)
                 miny = y;
-            if (y > maxy);
+            if (y > maxy)
                 maxy = y;
             if (graph) {
                 point = new vector<float>();

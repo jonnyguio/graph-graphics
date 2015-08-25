@@ -1,5 +1,6 @@
 #include "point.h"
 #include "edge.h"
+#include "face.h"
 #include <vector>
 #include <iostream>
 #include "radius.h"
@@ -19,6 +20,9 @@ class Graph {
         vector<Edge>
             *edges;
 
+        vector<Face>
+            *faces;
+
         bool
             hasConnected;
 
@@ -34,9 +38,13 @@ class Graph {
 
         void addVertice(Point*);
 
+        void setVertices(vector<Point>*);
+
         vector<Edge>* getEdges(void);
 
         void addEdge(Edge*);
+
+        void setEdges(vector<Edge>*);
 
         float Index(void);
 
@@ -60,5 +68,12 @@ class Graph {
         void connect(Radius*, Point*, Point*);
 
         int components ();
+
+        // TRIANGLES
+        void setTriangles();
+
+        bool formsTri(Edge *, Edge *, Edge *);
+
+        bool findInt(vector<unsigned long>, unsigned long, int);
 };
 #endif

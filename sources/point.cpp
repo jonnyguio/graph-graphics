@@ -45,7 +45,7 @@ void Point::print() {
 void Point::printCoordinates() {
     cout << "(";
     for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
-        cout << (it==this->coordinates->begin())?"":", ";
+        cout << ((it==this->coordinates->begin())?"":", ");
     }
     cout << ")" << endl;
 }
