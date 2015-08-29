@@ -268,7 +268,17 @@ void freeMembersLeft(graph g, int dimension){
 }
 
 void kill(int dimension){
-    //To be made
+    switch(dimension){
+        case 0:
+            freePoints.erase(freePoints.begin());
+            
+            break;
+        case 1:
+            break;
+        case 2:
+            //Currently not our concern...
+            break;
+    }
 }
 
 void Graph::collapse(graph g1, int dimension){
