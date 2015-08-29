@@ -28,6 +28,18 @@ int Edge::Index() {
     return this->index;
 }
 
+int Edge::Degree(){
+    return this->degree;
+}
+
+void Edge::SetDegree(int value){
+    this->degree = value;
+}
+
+int Edge::DegreePP(){
+    return ++this->degree;
+}
+
 Point* Edge::A() const {
     return this->a;
 }

@@ -15,13 +15,13 @@ class Graph {
             cc, index;
 
         vector<Point>
-            *points;
+            *points, *freePoints;
 
         vector<Edge>
-            *edges;
+            *edges, *freeEdges;
 
         vector<Face>
-            *faces;
+            *faces, *freeFaces;
 
         bool
             hasConnected;

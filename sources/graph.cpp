@@ -196,29 +196,91 @@ void Graph::setTriangles() {
 	}
 }
 
-graph* copy(graph* g1){
+graph* copy(graph g1){
   graph* temp;
   temp = (graph*) malloc(sizeof(graph));
-  temp->setVertices(g1->getVertices());
-  temp->setEdges(g1->getEdges());
-  temp->Index(g1->Index());
+  temp->setVertices(g1.getVertices());
+  temp->setEdges(g1.getEdges());
+  temp->Index(g1.Index());
   return temp;
+}
+
+void findFreeMembers(graph* g, dimension){
+    int i = 0;
+    switch(dimension){
+        case 0:
+            for(i = 0; i < faces.size(); i++){
+                if(points[i].Degree() == 1){
+                    freePoints.push_back(points[i]);
+                }
+            }
+            break;
+        case 1:
+            for(i = 0; i < faces.size(); i++){
+                if(edges[i].Degree() == 1){
+                    freeEdges.push_back(edges[i]);
+                }
+            }
+            break;
+        case 2:
+            for(i = 0; i < faces.size(); i++){
+                if(faces[i].Degree() == 1){
+                    freeFaces.push_back(faces[i]);
+                }
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void freeMembersLeft(graph g, int dimension){
+    switch(dimension){
+        case 0:
+            if(freePoints.size() > 0){
+                return true;
+            }
+            else{
+                return false;
+            }
+            break;
+        case 1:
+            if(freeEdges.size() > 0){
+                return true;
+            }
+            else{
+                return false;
+            }
+            break;
+        case 2:
+            if(freeFaces.size() > 0){
+                return true;
+            }
+            else{
+                return false;
+            }
+            break;
+        default:
+            printf("Wrong input! --> freeMembersLeft(graph g, int dimension);\n");
+            return false;
+            break;
+    }
+}
+
+void kill(int dimension){
+    //To be made
 }
 
 void Graph::collapse(graph g1, int dimension){
   graph* g2;
   g2 = copy(g1);
-  F
-  ace fTemp = new Face();
+  Face fTemp = new Face();
   if(dimension == 2){
     while(g2->getFaces().size() > 0){
-      while(freeMember(g2, 2)){
-
+      while(freeMembersLeft(g2, 2)){
+        kill(2);
       }
     }
-  }
-  while(){
-
   }
 
 }

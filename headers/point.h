@@ -8,6 +8,7 @@ class Point {
     private:
         vector<float> *coordinates;
         int index;
+        int degree;
 
     public:
         Point (int, vector<float>*);
@@ -18,6 +19,12 @@ class Point {
         void Index(int);
 
         int Index();
+
+        int Degree();
+
+        void SetDegree(int);
+
+        int DegreePP();
 
         void print(void);
 

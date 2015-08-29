@@ -27,6 +27,18 @@ int Point::Index() {
     return this->index;
 }
 
+int Point::Degree(){
+    return this->degree;
+}
+
+void Point::SetDegree(int value){
+    this->degree = value;
+}
+
+int Point::DegreePP(){
+    return ++this->degree;
+}
+
 vector<float>* Point::Coordinates() {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}

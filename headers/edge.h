@@ -11,7 +11,7 @@ class Edge {
         Point
             *a, *b;
         int
-            index;
+            index, degree;
 
     public:
         Edge (Point *, Point *);
@@ -21,6 +21,12 @@ class Edge {
         void Index(int);
 
         int Index(void);
+
+        int Degree();
+
+        void SetDegree(int);
+
+        int DegreePP();
 
         void print(void);
 

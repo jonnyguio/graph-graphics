@@ -12,6 +12,7 @@ class Face {
             *e2,
             *e3;
         int index;
+        int degree;
 
     public:
         Face (int, Edge *, Edge *, Edge *);
@@ -22,6 +23,12 @@ class Face {
         void Index(int);
 
         int Index();
+
+        int Degree();
+
+        void SetDegree(int);
+
+        int DegreePP();
 
         bool formsTri(Edge *, Edge *, Edge *);
 

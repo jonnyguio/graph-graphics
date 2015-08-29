@@ -29,6 +29,18 @@ void Face::Index(int index) {
     this->index = index;
 }
 
+int Face::Degree(){
+    return this->degree;
+}
+
+void Face::SetDegree(int value){
+    this->degree = value;
+}
+
+int Face::DegreePP(){
+    return ++this->degree;
+}
+
 int Face::Index() {
     return this->index;
 }
