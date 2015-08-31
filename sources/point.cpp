@@ -8,15 +8,21 @@ using namespace std;
 Point::Point (int index, vector<float> *input) {
     this->coordinates = input;
     this->index = index;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Point::Point (int index, vector<float> input) {
     this->coordinates = &input;
     this->index = index;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Point::Point () {
     this->coordinates = new vector<float>();
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 void Point::Index(int index) {
@@ -29,6 +35,14 @@ int Point::Index() {
 
 int Point::Degree(){
     return this->degree;
+}
+
+bool Point::Destroyed(){
+    return this->destroyed;
+}
+
+void Point::Destroy(){
+    this->destroyed = true;
 }
 
 void Point::SetDegree(int value){

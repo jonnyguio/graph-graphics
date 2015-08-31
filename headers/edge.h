@@ -9,9 +9,11 @@ class Edge {
 
     private:
         Point
-            *a, *b;
-        int
-            index, degree;
+            *a,
+            *b;
+        int index,
+            degree;
+        bool destroyed;
 
     public:
         Edge (Point *, Point *);
@@ -23,6 +25,10 @@ class Edge {
         int Index(void);
 
         int Degree();
+
+        bool Destroyed();
+
+        void Destroy();
 
         void SetDegree(int);
 

@@ -8,16 +8,22 @@ using namespace std;
 Edge::Edge () {
     this->a = NULL;
     this->b = NULL;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Edge::Edge (Point *a, Point *b) {
     this->a = a;
     this->b = b;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Edge::Edge (Point a, Point b) {
     this->a = &a;
     this->b = &b;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 void Edge::Index(int index) {
@@ -30,6 +36,14 @@ int Edge::Index() {
 
 int Edge::Degree(){
     return this->degree;
+}
+
+bool Point::Destroyed(){
+    return this->destroyed;
+}
+
+void Point::Destroy(){
+    this->destroyed = true;
 }
 
 void Edge::SetDegree(int value){

@@ -11,8 +11,9 @@ class Face {
             *e1,
             *e2,
             *e3;
-        int index;
-        int degree;
+        int index,
+            degree;
+        bool destroyed;
 
     public:
         Face (int, Edge *, Edge *, Edge *);
@@ -25,6 +26,10 @@ class Face {
         int Index();
 
         int Degree();
+
+        bool Destroyed();
+
+        void Destroy();
 
         void SetDegree(int);
 

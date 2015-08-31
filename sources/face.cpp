@@ -9,6 +9,8 @@ Face::Face () {
     this->e1 = NULL;
     this->e2 = NULL;
     this->e3 = NULL;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Face::Face (int index, Edge *e1, Edge *e2, Edge *e3) {
@@ -16,6 +18,8 @@ Face::Face (int index, Edge *e1, Edge *e2, Edge *e3) {
     this->e2 = e2;
     this->e3 = e3;
     this->index = index;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 Face::Face (int index, Edge e1, Edge e2, Edge e3) {
@@ -23,6 +27,8 @@ Face::Face (int index, Edge e1, Edge e2, Edge e3) {
     this->e2 = &e2;
     this->e3 = &e3;
     this->index = index;
+    this->degree = 0;
+    this->destroyed = false;
 }
 
 void Face::Index(int index) {
@@ -31,6 +37,14 @@ void Face::Index(int index) {
 
 int Face::Degree(){
     return this->degree;
+}
+
+bool Point::Destroyed(){
+    return this->destroyed;
+}
+
+void Point::Destroy(){
+    this->destroyed = true;
 }
 
 void Face::SetDegree(int value){

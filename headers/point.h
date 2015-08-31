@@ -7,8 +7,9 @@ using namespace std;
 class Point {
     private:
         vector<float> *coordinates;
-        int index;
-        int degree;
+        int index,
+            degree;
+        bool destroyed;
 
     public:
         Point (int, vector<float>*);
@@ -21,6 +22,10 @@ class Point {
         int Index();
 
         int Degree();
+
+        bool Destroyed();
+
+        void Destroy();
 
         void SetDegree(int);
 

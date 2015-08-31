@@ -42,11 +42,7 @@ vector<Edge>* Graph::getEdges() {
 }
 
 void Graph::setEdges(vector<Edge>* edges) {
-<<<<<<< HEAD
     this->edges = edges;
-=======
-    this->edges = edge;
->>>>>>> origin/master
 }
 
 void Graph::addEdge(Edge* edge) {
@@ -59,6 +55,14 @@ void Graph::Index(float index) {
 
 float Graph::Index() {
     return this->index;
+}
+
+int Graph::CC(){
+    return this->cc;
+}
+
+void Graph::CC(int cc){
+    this->cc = cc;
 }
 
 void Graph::HasConnected(bool state) {
@@ -140,6 +144,8 @@ void Graph::connect(Radius *r, Point *a, Point *b) {
 
     if (a->distance(b) / 2 < r->getRadius() && it == this->edges->end()) {
         this->edges->push_back(*(new Edge(a, b)));
+        this->edges[this->edges.size() - 1].a->DegreePP();
+        this->edges[this->edges.size() - 1].b->DegreePP();
     }
     /*vector<int>::iterator it;
     it = find (this->connected->begin(), this->connected->end(), g->Index());
@@ -196,21 +202,19 @@ void Graph::setTriangles() {
 	}
 }
 
-graph* copy(graph g1){
-  graph* temp;
-  temp = (graph*) malloc(sizeof(graph));
-  temp->setVertices(g1.getVertices());
-  temp->setEdges(g1.getEdges());
-  temp->Index(g1.Index());
+graph* Graph::copy(Graph g1){
+  Graph temp = new Graph(g1.Index(), g1.Points(), g1.Edges());
+  temp.CC(g1.CC());
+  temp.HasConnected(g1.HasConnected());
   return temp;
 }
 
-void findFreeMembers(graph* g, dimension){
+void Graph::findFreeMembers(Graph* g, dimension){
     int i = 0;
     switch(dimension){
         case 0:
             for(i = 0; i < faces.size(); i++){
-                if(points[i].Degree() == 1){
+                if(points[i].Degree() == 1 && point[i].Destroyed() == false){
                     freePoints.push_back(points[i]);
                 }
             }
@@ -234,7 +238,7 @@ void findFreeMembers(graph* g, dimension){
     }
 }
 
-void freeMembersLeft(graph g, int dimension){
+void Graph::freeMembersLeft(Graph g, int dimension){
     switch(dimension){
         case 0:
             if(freePoints.size() > 0){
@@ -267,13 +271,41 @@ void freeMembersLeft(graph g, int dimension){
     }
 }
 
-void kill(int dimension){
+void Graph::kill(int dimension){
+    iterator it;
     switch(dimension){
         case 0:
-            freePoints.erase(freePoints.begin());
-            
-            break;
+            if(freeEdges[0].a->degree == 1){
+                freeEdges[0].a->Destroy();
+                freePoints.erase(find (freePoints.begin(), freePoints.end(), freePoints[0].a));
+                freeEdges.erase(freeEdges.begin());
+            }
+            else if(freeEdges[0].b->degree == 1){
+                freeEdges[0].b->Destroy();
+                freePoints.erase(find (freePoints.begin(), freePoints.end(), freeFaces[0].b));
+                freeEdges.erase(freeEdges.begin());
+            }
         case 1:
+            if(freeFaces[0].e1->degree == 1){
+                freeFaces[0].e1->Destroy();
+                it = freeEdges.begin(), freeEdges.end(), freeFaces[0].e1);
+                if(find ( == freeFaces[0].e1){
+                    freeEdges.erase(it);
+                    freeFaces.erase(freeFaces.begin());
+                }
+                
+                
+            }
+            else if(freeFaces[0].e2->degree == 1){
+                freeFaces[0].e2->Destroy();
+                freeEdges.erase(find (freeEdges.begin(), freeEdges.end(), freeFaces[0].e2));
+                freeFaces.erase(freeFaces.begin());
+            }
+            else if(freeFaces[0].e3->degree == 1){
+                freeFaces[0].e3->Destroy();
+                freeEdges.erase(find (freeEdges.begin(), freeEdges.end(), freeFaces[0].e3));
+                freeFaces.erase(freeFaces.begin());
+            }
             break;
         case 2:
             //Currently not our concern...
@@ -281,16 +313,14 @@ void kill(int dimension){
     }
 }
 
-void Graph::collapse(graph g1, int dimension){
+void Graph::collapse(graph g1){
   graph* g2;
   g2 = copy(g1);
-  Face fTemp = new Face();
-  if(dimension == 2){
-    while(g2->getFaces().size() > 0){
-      while(freeMembersLeft(g2, 2)){
-        kill(2);
-      }
+  findFreeMembers(g2, 2);
+  while(g2->getFaces().size() > 0){
+    while(freeMembersLeft(g2, 2)){
+        kill(1);
     }
-  }
+}
 
 }

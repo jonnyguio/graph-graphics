@@ -50,6 +50,10 @@ class Graph {
 
         void Index(float);
 
+        int CC();
+
+        void CC(int);
+
         bool HasConnected(void);
 
         void HasConnected(bool);
