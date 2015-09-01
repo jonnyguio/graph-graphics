@@ -53,7 +53,7 @@ int Point::DegreePP(){
     return ++this->degree;
 }
 
-vector<float>* Point::Coordinates() {return this->coordinates;}
+vector<float>* Point::Coordinates() const {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}
 
@@ -83,6 +83,10 @@ float Point::distance(Point *p2) {
         sum += pow(*it2 - *it, 2);
     return
         sqrt(sum);
+}
+
+bool Point::operator==(const Point& p) {
+    return (this->coordinates == p.Coordinates());
 }
 
 template class vector<Point>;

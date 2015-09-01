@@ -37,11 +37,13 @@ class Point {
 
         float distance(Point*);
 
-        vector<float>* Coordinates();
+        vector<float>* Coordinates() const;
 
         //void Coordinates(int, int);
 
         void Coordinates(vector<float>*);
+
+        bool operator==(const Point&);
 
 };
 #endif

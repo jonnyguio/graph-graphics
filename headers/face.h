@@ -35,6 +35,12 @@ class Face {
 
         int DegreePP();
 
+        Edge* E1();
+
+        Edge* E2();
+        
+        Edge* E3();
+
         bool formsTri(Edge *, Edge *, Edge *);
 
 };

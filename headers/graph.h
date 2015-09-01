@@ -46,6 +46,12 @@ class Graph {
 
         void addEdge(Edge*);
 
+        vector<Face>* Faces();
+
+        void addFace(Face*);
+
+        void setFaces(vector<Face>*);
+
         float Index(void);
 
         void Index(float);
@@ -78,8 +84,25 @@ class Graph {
 
         bool formsTri(Edge *, Edge *, Edge *);
 
+        // Find Stuff
+
         bool findInt(vector<unsigned long>, unsigned long, int);
+
+        bool findPoint(vector<Point>, unsigned long, Point);
+
+        bool findEdge(vector<Edge>, unsigned long, Edge);
+
+
         //Collapse
-        void collapse(graph, int);
+        void collapse(Graph);
+
+        void findFreeMembers(Graph, int);
+
+        bool freeMembersLeft(Graph, int);
+
+        void kill(int);
+
+        //MISC
+        Graph* copy(Graph);
 };
 #endif

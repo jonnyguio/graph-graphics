@@ -55,6 +55,18 @@ int Face::DegreePP(){
     return ++this->degree;
 }
 
+Edge* Face::E1(){
+    return this->e1;
+}
+
+Edge* Face::E2(){
+    return this->e2;
+}
+
+Edge* Face::E3(){
+    return this->e3;
+}
+
 int Face::Index() {
     return this->index;
 }
