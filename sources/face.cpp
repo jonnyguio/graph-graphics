@@ -39,11 +39,11 @@ int Face::Degree(){
     return this->degree;
 }
 
-bool Point::Destroyed(){
+bool Face::Destroyed(){
     return this->destroyed;
 }
 
-void Point::Destroy(){
+void Face::Destroy(){
     this->destroyed = true;
 }
 

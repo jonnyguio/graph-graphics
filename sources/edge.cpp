@@ -38,11 +38,11 @@ int Edge::Degree(){
     return this->degree;
 }
 
-bool Point::Destroyed(){
+bool Edge::Destroyed(){
     return this->destroyed;
 }
 
-void Point::Destroy(){
+void Edge::Destroy(){
     this->destroyed = true;
 }
 
