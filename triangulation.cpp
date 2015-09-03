@@ -123,7 +123,7 @@ int main(){
 			}
 		}
 	}
-	//reverse(edges.begin(), edges.end());
+	reverse(edges.begin(), edges.end());
 	reverse(faces.begin(), faces.end());
 
 	for(i = 0; i < vSize; i++){

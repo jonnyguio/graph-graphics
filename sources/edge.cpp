@@ -34,6 +34,14 @@ int Edge::Index() {
     return this->index;
 }
 
+void Edge::Dist(float dist) {
+    this->dist = dist;
+}
+
+float Edge::Dist() {
+    return this->dist;
+}
+
 int Edge::Degree(){
     return this->degree;
 }
@@ -75,7 +83,7 @@ bool Edge::operator==(const Edge& e) {
 }
 
 void Edge::print() {
-    cout << "\t(" << this->a->Index() << ", " << this->b->Index() << ")" << endl;
+    cout << "Index: " << this->index << "\t(" << this->a->Index() << ", " << this->b->Index() << ") - Distance: " << this->dist << endl;
     //this->a->print();
     //this->b->print();
 }

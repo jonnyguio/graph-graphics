@@ -60,12 +60,13 @@ vector<float>* Point::Coordinates() const {return this->coordinates;}
 void Point::Coordinates(vector<float> *input) {this->coordinates = input;}
 
 void Point::print() {
-    /*cout << "(";
+    cout << "v" << index << ": ";
+    cout << "(";
     for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
-        cout << (it==this->coordinates->begin())?"":", ";
+        cout << *it;
+        cout << ((it+1==this->coordinates->end())?"":", ");
     }
     cout << ")" << endl;//("(%d, %d)\n", this.x, this.y);*/
-    cout << index << endl;
 }
 
 void Point::printCoordinates() {

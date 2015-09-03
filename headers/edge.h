@@ -13,9 +13,12 @@ class Edge {
             *b;
         int index,
             degree;
+        float
+            dist;
         bool destroyed;
 
     public:
+        bool printed;
         Edge (Point *, Point *);
         Edge (Point, Point);
         Edge ();
@@ -23,6 +26,10 @@ class Edge {
         void Index(int);
 
         int Index(void);
+
+        void Dist(float);
+
+        float Dist(void);
 
         int Degree();
 

@@ -13,6 +13,10 @@
 
 using namespace std;
 
+bool EdgeCompare(Edge e1, Edge e2) {
+    return e1.Dist() > e2.Dist();
+}
+
 int main () {
 
     vector<Point>
@@ -28,7 +32,7 @@ int main () {
         *radius;
 
     int
-        n, t, i;
+        n, t, i, j, k, fSize, eSize, vSize;
 
     float
         x, y,
@@ -41,12 +45,12 @@ int main () {
     streambuf
         *backup, *out;
 
-    ifstream infile("teste.txt");
+    ifstream infile("teste2");
     ofstream outfile("results.txt");
 
     backup = cout.rdbuf();
     out = outfile.rdbuf();
-    cout.rdbuf(out);
+    //cout.rdbuf(out);
 
     start = clock();
 
@@ -81,9 +85,93 @@ int main () {
         }
     }
 
+    //graph->print();
+
+    radius = new Radius(-1, -1);
+
+    i = 0;
+
+    for (vector<Point>::iterator it = graph->getVertices()->begin(); it != graph->getVertices()->end(); ++it) {
+        for (vector<Point>::iterator it2 = graph->getVertices()->begin() + ++i; it2 != graph->getVertices()->end(); ++it2) {
+            graph->connect(radius, &(*it), &(*it2));
+        }
+    }
+
+	sort(graph->getEdges()->begin(), graph->getEdges()->end(), EdgeCompare);
+
     graph->print();
 
-    used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
+    fSize = 0;
+    //graph->setTriangles();
+
+    i = 0;
+    for (vector<Edge>::iterator it = graph->getEdges()->begin(); it != graph->getEdges()->end(); ++it) {
+        j = i++ + 1;
+        for (vector<Edge>::iterator it2 = graph->getEdges()->begin() + j; it2 != graph->getEdges()->end(); ++it2) {
+            k = j++ + 1;
+            for (vector<Edge>::iterator it3 = graph->getEdges()->begin() + k; it3 != graph->getEdges()->end(); ++it3) {
+                if (graph->formsTri(*it, *it2, *it3)) {
+                    //cout << (*it).Index() << " " << (*it2).Index() << " " << (*it3).Index() << endl;
+					graph->Faces()->push_back(*(new Face(++fSize, &(*it), &(*it2), &(*it3))));
+                }
+
+            }
+        }
+    }/*
+    for(int i = 0; i < graph->getEdges()->size(); i++) {//Iterates through Last Edges
+		for(int j = i + 1; j < graph->getEdges()->size(); j++) {//Iterates through Middle Edges
+			for(int k = j + 1; k < graph->getEdges()->size(); k++) {//Iterates through First Edges
+				if (graph->formsTri(&(graph->getEdges()->at(i)), &(graph->getEdges()->at(j)), &(graph->getEdges()->at(k)))) {
+					graph->Faces()->push_back(Face(++fSize, graph->getEdges()->at(i), graph->getEdges()->at(j), graph->getEdges()->at(k)));
+				}
+			}
+		}
+	}*/
+
+    //reverse(graph->getEdges()->begin(), graph->getEdges()->end());
+	//reverse(graph->Faces()->begin(), graph->Faces()->end());
+
+    for (vector<Point>::iterator it = graph->getVertices()->begin(); it != graph->getVertices()->end(); ++it)
+    {
+        (*it).print();
+    }
+    cout << endl;
+
+    vSize = graph->getVertices()->size();
+    eSize = graph->getEdges()->size();
+
+    /*for (vector<Face>::iterator it = graph->Faces()->begin(); it != graph->Faces()->end(); ++it) {
+        cout << "f" << (*it).Index() << ": e" << (*it).E1()->Index() << " -- e" << (*it).E2()->Index() << "-- e" << (*it).E3()->Index() << endl;
+    }*/
+
+    for(i = 0, j = 0; i < eSize || j < fSize;) {
+        if (i < eSize && graph->getEdges()->at(i).printed == false) {
+
+            graph->getEdges()->at(i).printed = true;
+            printf("e%d: v%d -- v%d\n",
+                graph->getEdges()->at(i).Index(),
+                graph->getEdges()->at(i).A()->Index(),
+                graph->getEdges()->at(i).B()->Index());
+            i++;
+        }
+        cout << graph->Faces()->at(j).Index() << endl;
+        while (
+        j < fSize
+        && graph->Faces()->at(j).E1()->printed
+        && graph->Faces()->at(j).E2()->printed
+        && graph->Faces()->at(j).E3()->printed
+        ) {
+            graph->Faces()->at(j).Index(fSize - graph->Faces()->at(j).Index());
+            printf("f%d: e%d -- e%d -- e%d\n",
+                graph->Faces()->at(j).Index(),
+                graph->Faces()->at(j).E1()->Index(),
+                graph->Faces()->at(j).E2()->Index(),
+                graph->Faces()->at(j).E3()->Index());
+            j++;
+        }
+    }
+
+    /*used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
     t = 0;
     start = clock();
     radius = new Radius(0, 0.2);
@@ -97,11 +185,13 @@ int main () {
                 graph->connect(radius, &(*it), &(*it2));
             }
         }
-        cout << ++t << ": ";
-        cout << graph->components();
-        cout << endl;
+
+        //cout << ++t << ": ";
+        //cout << graph->components();
+        //cout << endl;
+        graph->collapse(*graph);
         //graph->print();
-    }
+    }*/
 
     end = clock();
     cout.rdbuf(backup);

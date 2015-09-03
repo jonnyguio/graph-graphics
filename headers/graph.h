@@ -36,17 +36,23 @@ class Graph {
         // GETTERS AND SETTERS
         vector<Point>* getVertices(void);
 
+        vector<Point>* FreePoints(void);
+
         void addVertice(Point*);
 
         void setVertices(vector<Point>*);
 
         vector<Edge>* getEdges(void);
 
+        vector<Edge>* FreeEdges(void);
+
         void setEdges(vector<Edge>*);
 
         void addEdge(Edge*);
 
         vector<Face>* Faces();
+
+        vector<Face>* FreeFaces(void);
 
         void addFace(Face*);
 
@@ -82,7 +88,7 @@ class Graph {
         // TRIANGLES
         void setTriangles();
 
-        bool formsTri(Edge *, Edge *, Edge *);
+        bool formsTri(Edge, Edge, Edge);
 
         // Find Stuff
 
@@ -96,13 +102,15 @@ class Graph {
         //Collapse
         void collapse(Graph);
 
-        void findFreeMembers(Graph, int);
+        void findFreeMembers(Graph*, int);
 
-        bool freeMembersLeft(Graph, int);
+        bool freeMembersLeft(Graph*, int);
 
         void kill(int);
 
         //MISC
         Graph* copy(Graph);
+
+        bool EdgeCompare(Edge e1, Edge e2);
 };
 #endif

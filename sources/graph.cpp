@@ -11,22 +11,29 @@ Graph::Graph(int index, vector<Point> *points) {
     this->points = points;
     this->edges = new vector<Edge>();
     this->index = index;
+    this->faces = new vector<Face>();
 }
 
 Graph::Graph(int index, vector<Point> points, vector<Edge> edges) {
     this->points = &points;
     this->edges = &edges;
     this->index = index;
+    this->faces = new vector<Face>();
 }
 
 Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
     this->points = points;
     this->edges = edges;
     this->index = index;
+    this->faces = new vector<Face>();
 }
 
 vector<Point>* Graph::getVertices() {
     return this->points;
+}
+
+vector<Point>* Graph::FreePoints() {
+    return this->freePoints;
 }
 
 void Graph::setVertices(vector<Point>* points) {
@@ -41,6 +48,10 @@ vector<Edge>* Graph::getEdges() {
     return this->edges;
 }
 
+vector<Edge>* Graph::FreeEdges() {
+    return this->freeEdges;
+}
+
 void Graph::setEdges(vector<Edge>* edges) {
     this->edges = edges;
 }
@@ -51,6 +62,10 @@ void Graph::addEdge(Edge* edge) {
 
 vector<Face>* Graph::Faces() {
     return this->faces;
+}
+
+vector<Face>* Graph::FreeFaces() {
+    return this->freeFaces;
 }
 
 void Graph::setFaces(vector<Face>* faces) {
@@ -144,40 +159,18 @@ bool Graph::findEdge(vector<Edge> v, unsigned long size, Edge toFind) {
     return false;
 }
 
-bool Graph::formsTri(Edge *e1, Edge *e2, Edge *e3) {
-    vector<unsigned long> v, v2;
-	int i;
-
-	v.push_back(e1->A()->Index());
-	v.push_back(e1->B()->Index());
-	v.push_back(e2->A()->Index());
-	v.push_back(e2->B()->Index());
-	v.push_back(e3->A()->Index());
-	v.push_back(e3->B()->Index());
-
-	for(i = 0; i < 6; i++) {
-		if (!findInt(v2, v2.size(), v[i])) {
-			v2.push_back(v[i]);
-		}
-	}
-	if (v2.size() == 3) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
 void Graph::connect(Radius *r, Point *a, Point *b) {
     Edge e = Edge(a, b);
     vector<Edge>::iterator it;
 
     it = find (this->edges->begin(), this->edges->end(), e);
 
-    if (a->distance(b) / 2 < r->getRadius() && it == this->edges->end()) {
+    if ((a->distance(b) / 2 < r->getRadius() && it == this->edges->end()) || r->getRadius() == -1) {
         this->edges->push_back(*(new Edge(a, b)));
         this->edges->at(this->edges->size() - 1).A()->DegreePP();
         this->edges->at(this->edges->size() - 1).B()->DegreePP();
+        this->edges->at(this->edges->size() - 1).Dist(a->distance(b));
+        this->edges->at(this->edges->size() - 1).Index(this->edges->size());
     }
     /*vector<int>::iterator it;
     it = find (this->connected->begin(), this->connected->end(), g->Index());
@@ -187,6 +180,11 @@ void Graph::connect(Radius *r, Point *a, Point *b) {
             //g->connect(this->index);
         }
     }*/
+}
+
+
+bool Graph::EdgeCompare(Edge e1, Edge e2) {
+    return e1.Dist() > e2.Dist();
 }
 
 int Graph::components() {
@@ -206,6 +204,30 @@ int Graph::components() {
     return vertices.size();
 }
 
+bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
+    vector<unsigned long> v, v2;
+	int i;
+
+	v.push_back(e1.A()->Index());
+	v.push_back(e1.B()->Index());
+	v.push_back(e2.A()->Index());
+	v.push_back(e2.B()->Index());
+	v.push_back(e3.A()->Index());
+	v.push_back(e3.B()->Index());
+
+	for(i = 0; i < 6; i++) {
+		if (!findInt(v2, v2.size(), v[i])) {
+			v2.push_back(v[i]);
+		}
+	}
+	if (v2.size() == 3) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Graph::setTriangles() {
     this->faces->clear();
 
@@ -221,7 +243,7 @@ void Graph::setTriangles() {
     for (i = 0; i < edgeTemp.size(); i++) {//Iterates through Last Edges
 		for (j = i+1; j < edgeTemp.size(); j++) {//Iterates through Middle Edges
 			for (k = j+1; k < edgeTemp.size(); k++) {//Iterates through First Edges
-				if (formsTri(&edgeTemp[i], &edgeTemp[j], &edgeTemp[k])) {
+				if (formsTri(edgeTemp[i], edgeTemp[j], edgeTemp[k])) {
 					this->faces->push_back(Face(fSize++, this->edges->at(i), this->edges->at(j), this->edges->at(k)));
 					//faces[fSize].lastEdge = &edges[i];
 					//faces[fSize].middleEdge = &edges[j];
@@ -241,27 +263,28 @@ Graph* Graph::copy(Graph g1){
   return temp;
 }
 
-void Graph::findFreeMembers(Graph g, int dimension){
+void Graph::findFreeMembers(Graph *g, int dimension) {
     int i = 0;
-    switch(dimension){
+    switch(dimension) {
         case 0:
-            for(i = 0; i < faces->size(); i++){
+            for (i = 0; i < g->Faces()->size(); i++){
                 if(points->at(i).Degree() == 1 && points->at(i).Destroyed() == false){
-                    freePoints->push_back(points->at(i));
+                    freePoints->push_back(g->getVertices()->at(i));
                 }
             }
             break;
         case 1:
-            for(i = 0; i < faces->size(); i++){
+            for(i = 0; i < g->Faces()->size(); i++){
                 if(edges->at(i).Degree() == 1 && edges->at(i).Destroyed() == false){
-                    freeEdges->push_back(edges->at(i));
+                    freeEdges->push_back(g->getEdges()->at(i));
                 }
             }
             break;
         case 2:
-            for(i = 0; i < faces->size(); i++){
-                if(faces->at(i).Degree() == 1 && edges->at(i).Destroyed() == false){
-                    freeFaces->push_back(faces->at(i));
+            cout << g->Faces() << endl;
+            for (i = 0; i < g->Faces()->size(); i++) {
+                if (g->Faces()->at(i).Degree() == 1 && edges->at(i).Destroyed() == false){
+                    freeFaces->push_back(g->Faces()->at(i));
                 }
             }
             break;
@@ -270,10 +293,10 @@ void Graph::findFreeMembers(Graph g, int dimension){
     }
 }
 
-bool Graph::freeMembersLeft(Graph g, int dimension){
+bool Graph::freeMembersLeft(Graph *g, int dimension){
     switch(dimension){
         case 0:
-            if(freePoints->size() > 0){
+            if(g->freePoints->size() > 0){
                 return true;
             }
             else{
@@ -357,13 +380,12 @@ void Graph::kill(int dimension){
 }
 
 void Graph::collapse(Graph g1){
-  Graph* g2;
-  g2 = copy(g1);
-  findFreeMembers(*g2, 2);
-  while(g2->Faces()->size() > 0){
-    while(freeMembersLeft(*g2, 2)){
-        kill(1);
+    Graph* g2;
+    g2 = copy(g1);
+    findFreeMembers(g2, 2);
+    while(g2->Faces()->size() > 0) {
+        while(freeMembersLeft(g2, 2)) {
+            kill(1);
+        }
     }
-}
-
 }
