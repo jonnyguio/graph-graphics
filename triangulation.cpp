@@ -8,7 +8,7 @@ typedef struct _vertex
 {
 	float x;
 	float y;
-	unsigned long index;
+	int index;
 } vertex;
 
 typedef struct _edge
@@ -17,7 +17,7 @@ typedef struct _edge
 	vertex* v2;
 	float dist;
 	bool printed;
-	unsigned long index;
+	int index;
 } edge;
 
 typedef struct _face
@@ -25,7 +25,7 @@ typedef struct _face
 	edge* firstEdge;
 	edge* middleEdge;
 	edge* lastEdge;
-	unsigned long index;
+	int index;
 } face;
 
 float distance(edge* e){//Returns simple euclidian distance
@@ -36,8 +36,8 @@ bool compare(edge e1, edge e2){
 	return e1.dist > e2.dist;
 }
 
-bool findInt(vector<unsigned long> v, unsigned long size, int toFind){
-	unsigned long i;
+bool findInt(vector<int> v, int size, int toFind){
+	int i;
 	for(i = 0; i<size; i++){
 		if(v[i] == toFind){
 			return true;
@@ -47,7 +47,7 @@ bool findInt(vector<unsigned long> v, unsigned long size, int toFind){
 }
 
 bool formsTri(edge e1, edge e2, edge e3){
-	vector<unsigned long> v, v2;
+	vector<int> v, v2;
 	int i;
 	v.push_back(e1.v1->index);
 	v.push_back(e1.v2->index);
@@ -74,9 +74,9 @@ int main(){
 	size_t eSize = 0;//Number of edges
 	size_t fSize = 0;//Number of faces
 
-	unsigned long i = 0;//Iteration counters
-	unsigned long j = 0;//Iteration counters
-	unsigned long k = 0;//Iteration counters
+	int i = 0;//Iteration counters
+	int j = 0;//Iteration counters
+	int k = 0;//Iteration counters
 
 	//Vectors
 	vector<vertex> vertices;

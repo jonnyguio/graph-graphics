@@ -36,6 +36,8 @@ class Face {
 
         int DegreePP();
 
+        int DegreeMM();
+
         Edge* E1();
 
         Edge* E2();

@@ -42,6 +42,8 @@ class Edge {
 
         int DegreePP();
 
+        int DegreeMM();
+
         void print(void);
 
         float distance(void);

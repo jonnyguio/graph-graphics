@@ -50,6 +50,10 @@ int Point::DegreePP(){
     return ++this->degree;
 }
 
+int Point::DegreeMM(){
+    return --this->degree;
+}
+
 vector<float> Point::Coordinates() const {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}

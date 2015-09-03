@@ -12,6 +12,9 @@ Graph::Graph(int index, vector<Point> *points) {
     this->edges = new vector<Edge>();
     this->index = index;
     this->faces = new vector<Face>();
+    this->freePoints = new vector<Point*>();
+    this->freeEdges = new vector<Edge*>();
+    this->freeFaces = new vector<Face*>();
 }
 
 Graph::Graph(int index, vector<Point> points, vector<Edge> edges) {
@@ -19,6 +22,9 @@ Graph::Graph(int index, vector<Point> points, vector<Edge> edges) {
     this->edges = &edges;
     this->index = index;
     this->faces = new vector<Face>();
+    this->freePoints = new vector<Point*>();
+    this->freeEdges = new vector<Edge*>();
+    this->freeFaces = new vector<Face*>();
 }
 
 Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
@@ -26,7 +32,21 @@ Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
     this->edges = edges;
     this->index = index;
     this->faces = new vector<Face>();
+    this->freePoints = new vector<Point*>();
+    this->freeEdges = new vector<Edge*>();
+    this->freeFaces = new vector<Face*>();
 }
+
+Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges, vector<Face> *faces) {
+    this->points = points;
+    this->edges = edges;
+    this->index = index;
+    this->faces = faces;
+    this->freePoints = new vector<Point*>();
+    this->freeEdges = new vector<Edge*>();
+    this->freeFaces = new vector<Face*>();
+}
+
 
 Graph::~Graph() {
     //cout << "Deleting the graph: " << this->index << endl;
@@ -39,7 +59,7 @@ vector<Point>* Graph::getVertices() {
     return this->points;
 }
 
-vector<Point>* Graph::FreePoints() {
+vector<Point*>* Graph::FreePoints() {
     return this->freePoints;
 }
 
@@ -55,7 +75,7 @@ vector<Edge>* Graph::getEdges() {
     return this->edges;
 }
 
-vector<Edge>* Graph::FreeEdges() {
+vector<Edge*>* Graph::FreeEdges() {
     return this->freeEdges;
 }
 
@@ -71,7 +91,7 @@ vector<Face>* Graph::Faces() {
     return this->faces;
 }
 
-vector<Face>* Graph::FreeFaces() {
+vector<Face*>* Graph::FreeFaces() {
     return this->freeFaces;
 }
 
@@ -136,8 +156,8 @@ void Graph::printDistances() {
     }
 }
 
-bool Graph::findInt(vector<unsigned long> v, unsigned long size, int toFind) {
-	unsigned long i;
+bool Graph::findInt(vector<int> v, int size, int toFind) {
+	int i;
 	for(i = 0; i<size; i++) {
 		if(v[i] == toFind) {
 			return true;
@@ -146,8 +166,8 @@ bool Graph::findInt(vector<unsigned long> v, unsigned long size, int toFind) {
 	return false;
 }
 
-bool Graph::findPoint(vector<Point> v, unsigned long size, Point toFind) {
-    unsigned long i;
+bool Graph::findPoint(vector<Point> v, int size, Point toFind) {
+    int i;
     for(i = 0; i<size; i++) {
         if(&v.at(i) == &toFind) {
             return true;
@@ -156,8 +176,8 @@ bool Graph::findPoint(vector<Point> v, unsigned long size, Point toFind) {
     return false;
 }
 
-bool Graph::findEdge(vector<Edge> v, unsigned long size, Edge toFind) {
-    unsigned long i;
+bool Graph::findEdge(vector<Edge> v, int size, Edge toFind) {
+    int i;
     for(i = 0; i<size; i++) {
         if(&v.at(i) == &toFind) {
             return true;
@@ -189,11 +209,6 @@ void Graph::connect(Radius *r, Point *a, Point *b) {
     }*/
 }
 
-
-bool Graph::EdgeCompare(Edge e1, Edge e2) {
-    return e1.Dist() > e2.Dist();
-}
-
 int Graph::components() {
 
     vector<int> vertices;
@@ -212,7 +227,7 @@ int Graph::components() {
 }
 
 bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
-    vector<unsigned long> v, v2;
+    vector<int> v, v2;
 	int i;
 
 	v.push_back(e1.A()->Index());
@@ -236,7 +251,7 @@ bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
 }
 
 void Graph::setTriangles() {
-    this->faces->clear();
+/*    this->faces->clear();
 
     int i, j, k;
 
@@ -247,9 +262,9 @@ void Graph::setTriangles() {
 
     int fSize = 1;
 
-    for (i = 0; i < edgeTemp.size(); i++) {//Iterates through Last Edges
-		for (j = i+1; j < edgeTemp.size(); j++) {//Iterates through Middle Edges
-			for (k = j+1; k < edgeTemp.size(); k++) {//Iterates through First Edges
+    for (i = 0; i < (int) edgeTemp.size(); i++) {//Iterates through Last Edges
+		for (j = i+1; j < (int) edgeTemp.size(); j++) {//Iterates through Middle Edges
+			for (k = j+1; k < (int) edgeTemp.size(); k++) {//Iterates through First Edges
 				if (formsTri(edgeTemp[i], edgeTemp[j], edgeTemp[k])) {
 					this->faces->push_back(Face(fSize++, this->edges->at(i), this->edges->at(j), this->edges->at(k)));
 					//faces[fSize].lastEdge = &edges[i];
@@ -260,13 +275,13 @@ void Graph::setTriangles() {
 				}
 			}
 		}
-	}
+	}*/
 }
 
-Graph* Graph::copy(Graph g1){
-  Graph* temp = new Graph(g1.Index(), g1.getVertices(), g1.getEdges());
-  temp->CC(g1.CC());
-  temp->HasConnected(g1.HasConnected());
+Graph* Graph::copy(Graph *g1){
+  Graph* temp = new Graph(g1->Index(), g1->getVertices(), g1->getEdges(), g1->Faces());
+  temp->CC(g1->CC());
+  temp->HasConnected(g1->HasConnected());
   return temp;
 }
 
@@ -274,24 +289,24 @@ void Graph::findFreeMembers(Graph *g, int dimension) {
     int i = 0;
     switch(dimension) {
         case 0:
-            for (i = 0; i < g->Faces()->size(); i++){
-                if(points->at(i).Degree() == 1 && points->at(i).Destroyed() == false){
-                    freePoints->push_back(g->getVertices()->at(i));
+            for (i = 0; i < (int) g->Faces()->size(); i++){
+                if(g->getVertices()->at(i).Degree() == 1 && g->getVertices()->at(i).Destroyed() == false){
+                    g->FreePoints()->push_back(&(g->getVertices()->at(i)));
                 }
             }
             break;
         case 1:
-            for(i = 0; i < g->Faces()->size(); i++){
-                if(edges->at(i).Degree() == 1 && edges->at(i).Destroyed() == false){
-                    freeEdges->push_back(g->getEdges()->at(i));
+            for(i = 0; i < (int) g->Faces()->size(); i++){
+                if(g->getEdges()->at(i).Degree() == 1 && g->getEdges()->at(i).Destroyed() == false){
+                    g->FreeEdges()->push_back(&(g->getEdges()->at(i)));
                 }
             }
             break;
         case 2:
-            cout << g->Faces() << endl;
-            for (i = 0; i < g->Faces()->size(); i++) {
-                if (g->Faces()->at(i).Degree() == 1 && edges->at(i).Destroyed() == false){
-                    freeFaces->push_back(g->Faces()->at(i));
+            cout << g->Faces()->size() << endl;
+            for (i = 0; i < (int) g->Faces()->size(); i++) {
+                if (g->Faces()->at(i).Degree() == 1 && g->Faces()->at(i).Destroyed() == false){
+                    g->FreeFaces()->push_back(&(g->Faces()->at(i)));
                 }
             }
             break;
@@ -303,7 +318,7 @@ void Graph::findFreeMembers(Graph *g, int dimension) {
 bool Graph::freeMembersLeft(Graph *g, int dimension){
     switch(dimension){
         case 0:
-            if(g->freePoints->size() > 0){
+            if(g->FreePoints()->size() > 0){
                 return true;
             }
             else{
@@ -311,7 +326,7 @@ bool Graph::freeMembersLeft(Graph *g, int dimension){
             }
             break;
         case 1:
-            if(freeEdges->size() > 0){
+            if(g->FreeEdges()->size() > 0){
                 return true;
             }
             else{
@@ -319,7 +334,7 @@ bool Graph::freeMembersLeft(Graph *g, int dimension){
             }
             break;
         case 2:
-            if(freeFaces->size() > 0){
+            if(g->FreeFaces()->size() > 0){
                 return true;
             }
             else{
@@ -327,56 +342,48 @@ bool Graph::freeMembersLeft(Graph *g, int dimension){
             }
             break;
         default:
-            printf("Wrong input! --> freeMembersLeft(graph g, int dimension);\n");
+            cout << "Wrong input! --> freeMembersLeft(graph g, int dimension);\n" ;
             return false;
             break;
     }
 }
 
-void Graph::kill(int dimension){
-    vector<Point>::iterator it;
-    vector<Edge>::iterator it2;
-    switch(dimension){
+bool Graph::kill(Graph *g, int dimension) {
+    //vector<Point>::iterator it;
+    //vector<Edge>::iterator it2;
+    switch(dimension) {
         case 0:
-            if(freeEdges->at(0).A()->Degree() == 1){
-                freeEdges->at(0).A()->Destroy();
-                //it = find (freePoints->begin(), freePoints->end(), p);
-                if(findPoint(*freePoints, freePoints->size(), *(freeEdges->at(0).A()))){
-                    freePoints->erase(it);
-                    freeEdges->erase(freeEdges->begin());
-                }
+            if(g->FreeEdges()->at(0)->A()->Degree() == 1){
+                g->FreeEdges()->at(0)->A()->Destroy();
+                g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->A()), g->FreePoints()->end());
+                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
+                return true;
             }
-            else if(freeEdges->at(0).B()->Degree() == 1){
-                freeEdges->at(0).B()->Destroy();
-                //it = find (freePoints->begin(), freePoints->end(), freeEdges->at(0).B());
-                if(findPoint(*freePoints, freePoints->size(), *(freeEdges->at(0).B()))){
-                    freePoints->erase(it);
-                    freeEdges->erase(freeEdges->begin());
-                }
+            else if(g->FreeEdges()->at(0)->B()->Degree() == 1){
+
+                g->FreeEdges()->at(0)->B()->Destroy();
+                g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->B()), g->FreePoints()->end());
+                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
+                return true;
             }
         case 1:
-            if(freeFaces->at(0).E1()->Degree() == 1){
-                freeFaces->at(0).E1()->Destroy();
-                //it2 = find ( freeEdges->begin(), freeEdges->end(), freeFaces->at(0).E1());
-                if(findEdge(*freeEdges, freeEdges->size(), *(freeFaces->at(0).E1()))){
-                    freePoints->erase(it);
-                    freeEdges->erase(freeEdges->begin());
-                }
+            if(g->FreeFaces()->at(0)->E1()->Degree() == 1){
+                g->FreeFaces()->at(0)->E1()->Destroy();
+                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E1()), g->FreeEdges()->end());
+                return true;
             }
-            else if(freeFaces->at(0).E2()->Degree() == 1){
-                freeFaces->at(0).E2()->Destroy();
-                //it2 = find ( freeEdges->begin(), freeEdges->end(), freeFaces->at(0).E2());
-                if(findEdge(*freeEdges, freeEdges->size(), *(freeFaces->at(0).E2()))){
-                    freePoints->erase(it);
-                    freeEdges->erase(freeEdges->begin());
+            else {
+                if(g->FreeFaces()->at(0)->E2()->Degree() == 1){
+                    g->FreeFaces()->at(0)->E2()->Destroy();
+                    g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E2()), g->FreeEdges()->end());
+                    return true;
                 }
-            }
-            else if(freeFaces->at(0).E3()->Degree() == 1){
-                freeFaces->at(0).E3()->Destroy();
-                //it2 = find (freeEdges->begin(), freeEdges->end(), freeFaces->at(0).E3());
-                if(findEdge(*freeEdges, freeEdges->size(), *(freeFaces->at(0).E3()))){
-                    freePoints->erase(it);
-                    freeEdges->erase(freeEdges->begin());
+                else {
+                    if(g->FreeFaces()->at(0)->E3()->Degree() == 1){
+                        g->FreeFaces()->at(0)->E3()->Destroy();
+                        g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E3()), g->FreeEdges()->end());
+                        return true;
+                    }
                 }
             }
             break;
@@ -384,15 +391,38 @@ void Graph::kill(int dimension){
             //Currently not our concern...
             break;
     }
+
+    return false;
 }
 
-void Graph::collapse(Graph g1){
+void Graph::killCrit(Graph *g, int dimension) {
+    switch (dimension) {
+        case 1:
+            g->getEdges()->at(0).A()->DegreeMM();
+            g->getEdges()->at(0).B()->DegreeMM();
+            g->getEdges()->erase(remove(g->getEdges()->begin(), g->getEdges()->end(), g->getEdges()->at(0)), g->getEdges()->end());
+            g->critEdges++;
+        break;
+        case 2:
+            g->Faces()->at(0).E1()->DegreeMM();
+            g->Faces()->at(0).E2()->DegreeMM();
+            g->Faces()->at(0).E3()->DegreeMM();
+            //g->Faces()->erase(remove(g->Faces()->begin(), g->Faces()->end(), g->Faces()->at(0)), g->Faces()->end());
+            g->critFaces++;
+        break;
+    }
+}
+
+void Graph::collapse(){
     Graph* g2;
-    g2 = copy(g1);
+    g2 = copy(this);
     findFreeMembers(g2, 2);
     while(g2->Faces()->size() > 0) {
         while(freeMembersLeft(g2, 2)) {
-            kill(1);
+            if (!kill(g2, 1)) {
+                killCrit(g2, 2);
+                findFreeMembers(g2, 2);
+            }
         }
     }
 }

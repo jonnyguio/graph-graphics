@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 #include "../headers/graph.h"
 
@@ -113,23 +114,17 @@ int main () {
                 if (graph->formsTri(*it, *it2, *it3)) {
                     //cout << (*it).Index() << " " << (*it2).Index() << " " << (*it3).Index() << endl;
 					graph->Faces()->push_back(*(new Face(++fSize, &(*it), &(*it2), &(*it3))));
+                    (*it).DegreePP();
+                    (*it2).DegreePP();
+                    (*it3).DegreePP();
                 }
 
             }
         }
-    }/*
-    for(int i = 0; i < graph->getEdges()->size(); i++) {//Iterates through Last Edges
-		for(int j = i + 1; j < graph->getEdges()->size(); j++) {//Iterates through Middle Edges
-			for(int k = j + 1; k < graph->getEdges()->size(); k++) {//Iterates through First Edges
-				if (graph->formsTri(&(graph->getEdges()->at(i)), &(graph->getEdges()->at(j)), &(graph->getEdges()->at(k)))) {
-					graph->Faces()->push_back(Face(++fSize, graph->getEdges()->at(i), graph->getEdges()->at(j), graph->getEdges()->at(k)));
-				}
-			}
-		}
-	}*/
+    }
 
     //reverse(graph->getEdges()->begin(), graph->getEdges()->end());
-	//reverse(graph->Faces()->begin(), graph->Faces()->end());
+	reverse(graph->Faces()->begin(), graph->Faces()->end());
 
     for (vector<Point>::iterator it = graph->getVertices()->begin(); it != graph->getVertices()->end(); ++it)
     {
@@ -140,24 +135,17 @@ int main () {
     vSize = graph->getVertices()->size();
     eSize = graph->getEdges()->size();
 
-    /*for (vector<Face>::iterator it = graph->Faces()->begin(); it != graph->Faces()->end(); ++it) {
-        cout << "f" << (*it).Index() << ": e" << (*it).E1()->Index() << " -- e" << (*it).E2()->Index() << "-- e" << (*it).E3()->Index() << endl;
-    }*/
-
     for(i = 0, j = 0; i < eSize || j < fSize;) {
-        if (i < eSize && graph->getEdges()->at(i).printed == false) {
+        if (i < eSize && graph->getEdges()->at(eSize - i - 1).printed == false) {
 
-            graph->getEdges()->at(i).printed = true;
+            graph->getEdges()->at(eSize - i - 1).printed = true;
             printf("e%d: v%d -- v%d\n",
-                graph->getEdges()->at(i).Index(),
-                graph->getEdges()->at(i).A()->Index(),
-                graph->getEdges()->at(i).B()->Index());
+                graph->getEdges()->at(eSize - i - 1).Index(),
+                graph->getEdges()->at(eSize - i - 1).A()->Index(),
+                graph->getEdges()->at(eSize - i - 1).B()->Index());
             i++;
         }
-        /*cout << graph->Faces()->at(j).Index()
-        << " " << graph->Faces()->at(j).E1()->Index()
-        << " " << graph->Faces()->at(j).E2()->Index()
-        << " " << graph->Faces()->at(j).E3()->Index() << endl;*/
+
         while (
         j < fSize
         && graph->Faces()->at(j).E1()->printed
@@ -174,27 +162,8 @@ int main () {
         }
     }
 
-    /*used = (maxy - miny > maxx - minx) ? maxy - miny : maxx - minx;
-    t = 0;
-    start = clock();
-    radius = new Radius(0, 0.2);
+    graph->collapse();
 
-    while (radius->getRadius() <= used / 2) {
-        radius->increase();
-
-        i = 0;
-        for (vector<Point>::iterator it = graph->getVertices()->begin(); it != graph->getVertices()->end(); ++it) {
-            for (vector<Point>::iterator it2 = graph->getVertices()->begin() + ++i; it2 != graph->getVertices()->end(); ++it2) {
-                graph->connect(radius, &(*it), &(*it2));
-            }
-        }
-
-        //cout << ++t << ": ";
-        //cout << graph->components();
-        //cout << endl;
-        graph->collapse(*graph);
-        //graph->print();
-    }*/
 
     end = clock();
     cout.rdbuf(backup);

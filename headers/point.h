@@ -31,6 +31,8 @@ class Point {
 
         int DegreePP();
 
+        int DegreeMM();
+
         void print(void);
 
         void printCoordinates(void);

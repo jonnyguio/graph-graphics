@@ -15,21 +15,33 @@ class Graph {
             cc, index;
 
         vector<Point>
-            *points, *freePoints;
+            *points;
+
+        vector<Point*>
+            *freePoints;
 
         vector<Edge>
-            *edges, *freeEdges;
+            *edges;
+
+        vector<Edge*>
+            *freeEdges;
 
         vector<Face>
-            *faces, *freeFaces;
+            *faces;
+
+        vector<Face*>
+            *freeFaces;
 
         bool
             hasConnected;
 
     public:
+        int critVertices = 0, critEdges = 0, critFaces = 0;
         Graph(int, vector<Point>, vector<Edge>);
 
         Graph(int, vector<Point>*, vector<Edge>*);
+
+        Graph(int, vector<Point>*, vector<Edge>*, vector<Face>*);
 
         Graph(int, vector<Point>*);
 
@@ -38,7 +50,7 @@ class Graph {
         // GETTERS AND SETTERS
         vector<Point>* getVertices(void);
 
-        vector<Point>* FreePoints(void);
+        vector<Point*>* FreePoints(void);
 
         void addVertice(Point*);
 
@@ -46,7 +58,7 @@ class Graph {
 
         vector<Edge>* getEdges(void);
 
-        vector<Edge>* FreeEdges(void);
+        vector<Edge*>* FreeEdges(void);
 
         void setEdges(vector<Edge>*);
 
@@ -54,7 +66,7 @@ class Graph {
 
         vector<Face>* Faces();
 
-        vector<Face>* FreeFaces(void);
+        vector<Face*>* FreeFaces(void);
 
         void addFace(Face*);
 
@@ -94,25 +106,26 @@ class Graph {
 
         // Find Stuff
 
-        bool findInt(vector<unsigned long>, unsigned long, int);
+        bool findInt(vector<int>, int, int);
 
-        bool findPoint(vector<Point>, unsigned long, Point);
+        bool findPoint(vector<Point>, int, Point);
 
-        bool findEdge(vector<Edge>, unsigned long, Edge);
+        bool findEdge(vector<Edge>, int, Edge);
 
 
         //Collapse
-        void collapse(Graph);
+        void collapse();
 
         void findFreeMembers(Graph*, int);
 
         bool freeMembersLeft(Graph*, int);
 
-        void kill(int);
+        bool kill(Graph*, int);
+
+        void killCrit(Graph*, int);
 
         //MISC
-        Graph* copy(Graph);
+        Graph* copy(Graph*);
 
-        bool EdgeCompare(Edge e1, Edge e2);
 };
 #endif

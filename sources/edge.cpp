@@ -69,6 +69,10 @@ int Edge::DegreePP(){
     return ++this->degree;
 }
 
+int Edge::DegreeMM(){
+    return --this->degree;
+}
+
 Point* Edge::A() const {
     return this->a;
 }
