@@ -31,6 +31,10 @@ Face::Face (int index, Edge e1, Edge e2, Edge e3) {
     this->destroyed = false;
 }
 
+Face::~Face() {
+    //cout << "Destroying face: " << this->index << endl;
+}
+
 void Face::Index(int index) {
     this->index = index;
 }

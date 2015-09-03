@@ -10,6 +10,7 @@ Edge::Edge () {
     this->b = NULL;
     this->degree = 0;
     this->destroyed = false;
+    this->printed = false;
 }
 
 Edge::Edge (Point *a, Point *b) {
@@ -17,6 +18,7 @@ Edge::Edge (Point *a, Point *b) {
     this->b = b;
     this->degree = 0;
     this->destroyed = false;
+    this->printed = false;
 }
 
 Edge::Edge (Point a, Point b) {
@@ -24,6 +26,11 @@ Edge::Edge (Point a, Point b) {
     this->b = &b;
     this->degree = 0;
     this->destroyed = false;
+    this->printed = false;
+}
+
+Edge::~Edge() {
+    //cout << "Destroying edge: " << this->index << endl;
 }
 
 void Edge::Index(int index) {
@@ -92,7 +99,7 @@ float Edge::distance() {
     float sum=0;
     vector<float>::iterator it, it2;
     for (
-        it2 = this->a->Coordinates()->begin(), it = this->b->Coordinates()->begin(); it != this->a->Coordinates()->end() || it2 != this->b->Coordinates()->end(); ++it, ++it2
+        it2 = this->a->Coordinates().begin(), it = this->b->Coordinates().begin(); it != this->a->Coordinates().end() || it2 != this->b->Coordinates().end(); ++it, ++it2
         )
         sum += pow(*it2 - *it, 2);
     return

@@ -5,24 +5,21 @@
 
 using namespace std;
 
-Point::Point (int index, vector<float> *input) {
+Point::Point (int index, vector<float> input) {
     this->coordinates = input;
     this->index = index;
     this->degree = 0;
     this->destroyed = false;
 }
 
-Point::Point (int index, vector<float> input) {
-    this->coordinates = &input;
-    this->index = index;
+Point::Point () {
     this->degree = 0;
     this->destroyed = false;
 }
 
-Point::Point () {
-    this->coordinates = new vector<float>();
-    this->degree = 0;
-    this->destroyed = false;
+Point::~Point() {
+    //cout << "Destroying point: " << this->index << endl;
+    this->coordinates.clear();
 }
 
 void Point::Index(int index) {
@@ -53,26 +50,26 @@ int Point::DegreePP(){
     return ++this->degree;
 }
 
-vector<float>* Point::Coordinates() const {return this->coordinates;}
+vector<float> Point::Coordinates() const {return this->coordinates;}
 
 //void Point::Coordinates(int val, int index) {this->coordinates[index] = val;}
 
-void Point::Coordinates(vector<float> *input) {this->coordinates = input;}
+void Point::Coordinates(vector<float> input) {this->coordinates = input;}
 
 void Point::print() {
     cout << "v" << index << ": ";
     cout << "(";
-    for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
+    for (vector<float>::iterator it = this->coordinates.begin(); it != this->coordinates.end(); ++it) {
         cout << *it;
-        cout << ((it+1==this->coordinates->end())?"":", ");
+        cout << ((it+1==this->coordinates.end())?"":", ");
     }
     cout << ")" << endl;//("(%d, %d)\n", this.x, this.y);*/
 }
 
 void Point::printCoordinates() {
     cout << "(";
-    for (vector<float>::iterator it = this->coordinates->begin(); it != this->coordinates->end(); ++it) {
-        cout << ((it==this->coordinates->begin())?"":", ");
+    for (vector<float>::iterator it = this->coordinates.begin(); it != this->coordinates.end(); ++it) {
+        cout << ((it==this->coordinates.begin())?"":", ");
     }
     cout << ")" << endl;
 }
@@ -80,7 +77,7 @@ void Point::printCoordinates() {
 float Point::distance(Point *p2) {
     float sum=0;
     vector<float>::iterator it, it2;
-    for (it2 = p2->Coordinates()->begin(), it = this->coordinates->begin(); it != this->coordinates->end(); ++it, ++it2)
+    for (it2 = p2->Coordinates().begin(), it = this->coordinates.begin(); it != this->coordinates.end(); ++it, ++it2)
         sum += pow(*it2 - *it, 2);
     return
         sqrt(sum);

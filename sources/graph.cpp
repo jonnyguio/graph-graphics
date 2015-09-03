@@ -28,6 +28,13 @@ Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges) {
     this->faces = new vector<Face>();
 }
 
+Graph::~Graph() {
+    //cout << "Deleting the graph: " << this->index << endl;
+    delete this->faces;
+    delete this->edges;
+    delete this->points;
+}
+
 vector<Point>* Graph::getVertices() {
     return this->points;
 }
@@ -160,10 +167,10 @@ bool Graph::findEdge(vector<Edge> v, unsigned long size, Edge toFind) {
 }
 
 void Graph::connect(Radius *r, Point *a, Point *b) {
-    Edge e = Edge(a, b);
+    //Edge e = Edge(a, b);
     vector<Edge>::iterator it;
 
-    it = find (this->edges->begin(), this->edges->end(), e);
+    it = find (this->edges->begin(), this->edges->end(), Edge(a,b));
 
     if ((a->distance(b) / 2 < r->getRadius() && it == this->edges->end()) || r->getRadius() == -1) {
         this->edges->push_back(*(new Edge(a, b)));

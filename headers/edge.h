@@ -22,6 +22,7 @@ class Edge {
         Edge (Point *, Point *);
         Edge (Point, Point);
         Edge ();
+        ~Edge();
 
         void Index(int);
 

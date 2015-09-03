@@ -6,15 +6,15 @@ using namespace std;
 
 class Point {
     private:
-        vector<float> *coordinates;
+        vector<float> coordinates;
         int index,
             degree;
         bool destroyed;
 
     public:
-        Point (int, vector<float>*);
         Point (int, vector<float>);
         Point ();
+        ~Point();
 
     public:
         void Index(int);
@@ -37,11 +37,11 @@ class Point {
 
         float distance(Point*);
 
-        vector<float>* Coordinates() const;
+        vector<float> Coordinates() const;
 
         //void Coordinates(int, int);
 
-        void Coordinates(vector<float>*);
+        void Coordinates(vector<float>);
 
         bool operator==(const Point&);
 

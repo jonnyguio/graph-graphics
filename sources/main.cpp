@@ -23,7 +23,7 @@ int main () {
         *points;
 
     vector<float>
-        *point;
+        point;
 
     Graph
         *graph = NULL;
@@ -67,19 +67,19 @@ int main () {
             if (y > maxy)
                 maxy = y;
             if (graph) {
-                point = new vector<float>();
-                point->push_back(x);
-                point->push_back(y);
+                point.push_back(x);
+                point.push_back(y);
                 graph->addVertice(new Point(++n, point));
+                point.clear();
                 //graph->print();
             }
             else {
-                point = new vector<float>();
-                point->push_back(x);
-                point->push_back(y);
+                point.push_back(x);
+                point.push_back(y);
                 points = new vector<Point>();
                 points->push_back(*(new Point(++n, point)));
                 graph = new Graph(1, points);
+                point.clear();
                 //begin->print();
             }
         }
@@ -154,7 +154,10 @@ int main () {
                 graph->getEdges()->at(i).B()->Index());
             i++;
         }
-        cout << graph->Faces()->at(j).Index() << endl;
+        /*cout << graph->Faces()->at(j).Index()
+        << " " << graph->Faces()->at(j).E1()->Index()
+        << " " << graph->Faces()->at(j).E2()->Index()
+        << " " << graph->Faces()->at(j).E3()->Index() << endl;*/
         while (
         j < fSize
         && graph->Faces()->at(j).E1()->printed
@@ -197,6 +200,10 @@ int main () {
     cout.rdbuf(backup);
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 
+    delete graph;
+    delete radius;
+
+    return 0;
     //cout << endl << "Radius: " << radius->getRadius() << endl;
     //begin->printAll();
     //begin->printDistances();

@@ -19,6 +19,7 @@ class Face {
         Face (int, Edge *, Edge *, Edge *);
         Face (int, Edge, Edge, Edge);
         Face ();
+        ~Face();
 
     public:
         void Index(int);
@@ -38,7 +39,7 @@ class Face {
         Edge* E1();
 
         Edge* E2();
-        
+
         Edge* E3();
 
         bool formsTri(Edge *, Edge *, Edge *);

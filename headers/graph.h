@@ -33,6 +33,8 @@ class Graph {
 
         Graph(int, vector<Point>*);
 
+        ~Graph();
+
         // GETTERS AND SETTERS
         vector<Point>* getVertices(void);
 
