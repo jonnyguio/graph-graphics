@@ -4,8 +4,18 @@
 #include <algorithm>
 #include <vector>
 #include <ctime>
+#include <fstream>
+#include <sstream>
+
+#define MAXPOINT 10000
 
 using namespace std;
+
+struct EdgeCompare {
+  bool operator()(const Edge& e1, const Edge& e2) const {
+    return e1.Dist() > e2.Dist();
+  }
+} compare;
 
 Graph::Graph(int index, vector<Point> *points) {
     this->points = points;
@@ -42,6 +52,16 @@ Graph::Graph(int index, vector<Point> *points, vector<Edge> *edges, vector<Face>
     this->edges = edges;
     this->index = index;
     this->faces = faces;
+    this->freePoints = new vector<Point*>();
+    this->freeEdges = new vector<Edge*>();
+    this->freeFaces = new vector<Face*>();
+}
+
+Graph::Graph(int index) {
+    this->points = new vector<Point>();
+    this->edges = new vector<Edge>();
+    this->index = index;
+    this->faces = new vector<Face>();
     this->freePoints = new vector<Point*>();
     this->freeEdges = new vector<Edge*>();
     this->freeFaces = new vector<Face*>();
@@ -436,4 +456,137 @@ void Graph::collapse(){
             }
         }
     }
+}
+
+void Graph::calc(streambuf *backup, streambuf *out) {
+
+    vector<float>
+        point;
+
+    Radius
+        *radius;
+
+    int
+        n, i, j, k, fSize, eSize, vSize;
+
+    float
+        x, y,
+        minx = 0, maxx = 0, miny = 0, maxy = 0;
+
+    ifstream infile("teste2");
+    
+    //cout.rdbuf(out);
+
+    n = 0;
+    //begin = NULL;
+    while (infile >> x >> y) {
+        if (x < MAXPOINT && y < MAXPOINT) {
+            if (x < minx)
+                minx = x;
+            if (x > maxx)
+                maxx = x;
+            if (y < miny)
+                miny = y;
+            if (y > maxy)
+                maxy = y;
+            //if (this) {
+            point.push_back(x);
+            point.push_back(y);
+            this->addVertice(new Point(++n, point));
+            point.clear();
+                //this->print();
+            //}
+            /*else {
+                point.push_back(x);
+                point.push_back(y);
+                points = new vector<Point>();
+                points->push_back(*(new Point(++n, point)));
+                this->points = points;
+                this->index = 1;
+                point.clear();
+                //begin->print();
+            }*/
+        }
+    }
+
+    //this->print();
+
+    radius = new Radius(-1, -1);
+
+    i = 0;
+
+    for (vector<Point>::iterator it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it) {
+        for (vector<Point>::iterator it2 = this->getVertices()->begin() + ++i; it2 != this->getVertices()->end(); ++it2) {
+            this->connect(radius, &(*it), &(*it2));
+        }
+    }
+
+    sort(this->getEdges()->begin(), this->getEdges()->end(), compare);
+
+    this->print();
+
+    fSize = 0;
+    //this->setTriangles();
+
+    i = 0;
+    for (vector<Edge>::iterator it = this->getEdges()->begin(); it != this->getEdges()->end(); ++it) {
+        j = i++ + 1;
+        for (vector<Edge>::iterator it2 = this->getEdges()->begin() + j; it2 != this->getEdges()->end(); ++it2) {
+            k = j++ + 1;
+            for (vector<Edge>::iterator it3 = this->getEdges()->begin() + k; it3 != this->getEdges()->end(); ++it3) {
+                if (this->formsTri(*it, *it2, *it3)) {
+                    //cout << (*it).Index() << " " << (*it2).Index() << " " << (*it3).Index() << endl;
+                    this->Faces()->push_back(*(new Face(++fSize, &(*it), &(*it2), &(*it3))));
+                    (*it).DegreePP();
+                    (*it2).DegreePP();
+                    (*it3).DegreePP();
+                }
+
+            }
+        }
+    }
+
+    //reverse(this->getEdges()->begin(), this->getEdges()->end());
+    reverse(this->Faces()->begin(), this->Faces()->end());
+
+    for (vector<Point>::iterator it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it)
+    {
+        (*it).print();
+    }
+    cout << endl;
+
+    vSize = this->getVertices()->size();
+    eSize = this->getEdges()->size();
+
+    for(i = 0, j = 0; i < eSize || j < fSize;) {
+        if (i < eSize && this->getEdges()->at(eSize - i - 1).printed == false) {
+
+            this->getEdges()->at(eSize - i - 1).printed = true;
+            printf("e%d: v%d -- v%d\n",
+                this->getEdges()->at(eSize - i - 1).Index(),
+                this->getEdges()->at(eSize - i - 1).A()->Index(),
+                this->getEdges()->at(eSize - i - 1).B()->Index());
+            i++;
+        }
+        while (
+        j < fSize
+        && this->Faces()->at(j).E1()->printed
+        && this->Faces()->at(j).E2()->printed
+        && this->Faces()->at(j).E3()->printed
+        ) {
+            this->Faces()->at(j).Index(fSize - this->Faces()->at(j).Index());
+
+            printf("f%d: e%d -- e%d -- e%d\n",
+                this->Faces()->at(j).Index(),
+                this->Faces()->at(j).E1()->Index(),
+                this->Faces()->at(j).E2()->Index(),
+                this->Faces()->at(j).E3()->Index());
+            j++;
+        }
+    }
+
+    //this->collapse();
+
+    delete radius;
+
 }

@@ -45,6 +45,8 @@ class Graph {
 
         Graph(int, vector<Point>*);
 
+        Graph(int);
+
         ~Graph();
 
         // GETTERS AND SETTERS
@@ -126,6 +128,8 @@ class Graph {
 
         //MISC
         Graph* copy(Graph*);
+
+        void calc(streambuf *, streambuf *);
 
 };
 #endif

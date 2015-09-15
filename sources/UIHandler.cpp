@@ -1,16 +1,9 @@
 #include <GLUT/GLUT.h>
 #include <iostream>
-#include "../headers/main.h"
+#include "../headers/UIHandler.h"
 
-void render(void);
-
-void keyboard(unsigned char c, int x, int y);
-
-void mouse(int button, int state, int x, int y);
-
-bool drawFaces = false;
-
-int main(int argc, char** argv){
+int UIHandler::init(int argc, char** argv){
+	//UIHandler::drawFaces = false;
 	printf("Press ESC or Right Click to quit.\n");
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -22,25 +15,26 @@ int main(int argc, char** argv){
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
 
-	glutMainLoop();
 }
 
-void keyboard(unsigned char c, int x, int y){
+void UIHandler::keyboard(unsigned char c, int x, int y){
+	printf("%d", c);
 	if(c == 27 /*ESC*/){
 		exit(0);
 	}
-	if(c == 32 /*ESC*/){
-		glutPostRedisplay();	
+	if(c == 46 /*ESC*/){
+		drawFaces = !drawFaces;
+		glutPostRedisplay();
 	}
 }
 
-void mouse(int button, int state, int x, int y){
+void UIHandler::mouse(int button, int state, int x, int y){
 	if(button == GLUT_RIGHT_BUTTON){
 		exit(0);
 	}
 }
 
-void drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B){
+void UIHandler::drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B){
 	glLineWidth(width);
     glColor3ub( R, G, B );
     glBegin(GL_LINE_STRIP);
@@ -49,7 +43,7 @@ void drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G,
     glEnd();
 }
 
-void drawFace(float x1, float y1, float x2, float y2, float x3, float y3, int R, int G, int B){
+void UIHandler::drawFace(float x1, float y1, float x2, float y2, float x3, float y3, int R, int G, int B){
 	glLineWidth(1);
 	glColor3ub( R, G, B );
 	glBegin(GL_TRIANGLES);
@@ -59,11 +53,11 @@ void drawFace(float x1, float y1, float x2, float y2, float x3, float y3, int R,
 	glEnd();
 }
 
-void drawGraph(){
+void UIHandler::drawGraph(){
 	//To be done
 }
 
-void render(void){
+void UIHandler::render(void){
 	glClear( GL_COLOR_BUFFER_BIT );
 
     glMatrixMode( GL_PROJECTION );
@@ -97,15 +91,15 @@ void render(void){
 	drawEdge(2, 0.0, 0.0, 2.0, 2.0, 210, 0, 0);//e0: v0 -- v1
 	drawEdge(2, 2.0, 2.0, 3.0, 4.0, 168, 0, 42);//e3: v1 -- v2
 	drawEdge(2, 0.0, 0.0, 3.0, 4.0, 126, 0, 84);//e1: v0 -- v2
-	
+
 	drawEdge(2, 3.0, 4.0, 12.0, 5.0, 84, 0, 126);//e5: v2 -- v3
 	drawEdge(2, 2.0, 2.0, 12.0, 5.0, 42, 0, 168);//e4: v1 -- v3
-	
+
 	drawEdge(2, 0.0, 0.0, 12.0, 5.0, 0, 0, 210);//e2: v0 -- v3
 
 	//Change next to true in order to see the faces
-	
-	if(drawFaces){	
+
+	if(drawFaces){
 		drawFace(2.0, 2.0, 3.0, 4.0, 12.0, 5.0, 42, 0, 147);//f1: e3 -- e5 -- e4
 		drawFace(0.0, 0.0, 3.0, 4.0, 12.0, 5.0, 24, 0, 189);//f2: e1 -- e5 -- e2
 		drawFace(0.0, 0.0, 2.0, 2.0, 12.0, 5.0, 0, 0, 255);//f3: e0 -- e4 -- e2
