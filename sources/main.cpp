@@ -16,9 +16,15 @@
 
 using namespace std;
 
-bool EdgeCompare(Edge e1, Edge e2) {
+struct EdgeCompare {
+  bool operator()(const Edge& e1, const Edge& e2) const {
     return e1.Dist() > e2.Dist();
-}
+  }
+}compare;
+
+/*bool EdgeCompare(Edge e1, Edge e2) {
+    return e1.Dist() > e2.Dist();
+}*/
 
 int Main::mainCalculations() {
 
@@ -99,7 +105,7 @@ int Main::mainCalculations() {
         }
     }
 
-	sort(graph->getEdges()->begin(), graph->getEdges()->end(), EdgeCompare);
+	sort(graph->getEdges()->begin(), graph->getEdges()->end(), compare);
 
     graph->print();
 

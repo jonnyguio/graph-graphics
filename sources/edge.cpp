@@ -41,11 +41,11 @@ int Edge::Index() {
     return this->index;
 }
 
-void Edge::Dist(float dist) {
+void Edge::Dist(float dist){
     this->dist = dist;
 }
 
-float Edge::Dist() {
+float Edge::Dist() const{
     return this->dist;
 }
 

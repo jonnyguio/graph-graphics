@@ -30,7 +30,7 @@ class Edge {
 
         void Dist(float);
 
-        float Dist(void);
+        float Dist(void) const;
 
         int Degree();
 
