@@ -21,6 +21,8 @@ class Face {
         Face ();
         ~Face();
 
+        bool operator==(const Face&);
+
     public:
         void Index(int);
 
@@ -38,11 +40,11 @@ class Face {
 
         int DegreeMM();
 
-        Edge* E1();
+        Edge* E1() const;
 
-        Edge* E2();
+        Edge* E2() const;
 
-        Edge* E3();
+        Edge* E3() const;
 
         bool formsTri(Edge *, Edge *, Edge *);
 

@@ -118,7 +118,7 @@ class Graph {
         //Collapse
         void collapse();
 
-        void findFreeMembers(Graph*, int);
+        void livingMembers(Graph*, int);
 
         bool freeMembersLeft(Graph*, int);
 

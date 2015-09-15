@@ -18,7 +18,7 @@ int UIHandler::init(int argc, char** argv){
 }
 
 void UIHandler::keyboard(unsigned char c, int x, int y){
-	printf("%d", c);
+	cout << (int)c << endl;
 	if(c == 27 /*ESC*/){
 		exit(0);
 	}

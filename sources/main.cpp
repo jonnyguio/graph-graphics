@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
     graph = new Graph(1);
     graph->calc(backup, out);
 
-    UIHandler::init(argc, argv);
+    //UIHandler::init(argc, argv);
+    //glutMainLoop();
 
     end = clock();
 
@@ -47,7 +48,6 @@ int main(int argc, char** argv) {
     delete graph;
 
 
-    glutMainLoop();
     //cout << endl << "Radius: " << radius->getRadius() << endl;
     //begin->printAll();
     //begin->printDistances();

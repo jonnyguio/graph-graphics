@@ -6,6 +6,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <typeinfo>
 
 #define MAXPOINT 10000
 
@@ -270,34 +271,6 @@ bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
 	}
 }
 
-void Graph::setTriangles() {
-/*    this->faces->clear();
-
-    int i, j, k;
-
-    vector<Edge> edgeTemp;
-    edgeTemp = *(this->edges);
-
-    reverse(edgeTemp.begin(), edgeTemp.end());
-
-    int fSize = 1;
-
-    for (i = 0; i < (int) edgeTemp.size(); i++) {//Iterates through Last Edges
-		for (j = i+1; j < (int) edgeTemp.size(); j++) {//Iterates through Middle Edges
-			for (k = j+1; k < (int) edgeTemp.size(); k++) {//Iterates through First Edges
-				if (formsTri(edgeTemp[i], edgeTemp[j], edgeTemp[k])) {
-					this->faces->push_back(Face(fSize++, this->edges->at(i), this->edges->at(j), this->edges->at(k)));
-					//faces[fSize].lastEdge = &edges[i];
-					//faces[fSize].middleEdge = &edges[j];
-					//faces[fSize].firstEdge = &edges[k];
-					//faces[fSize].index = fSize;
-					//fSize++;
-				}
-			}
-		}
-	}*/
-}
-
 Graph* Graph::copy(Graph *g1){
   Graph* temp = new Graph(g1->Index(), g1->getVertices(), g1->getEdges(), g1->Faces());
   temp->CC(g1->CC());
@@ -305,27 +278,29 @@ Graph* Graph::copy(Graph *g1){
   return temp;
 }
 
-void Graph::findFreeMembers(Graph *g, int dimension) {
+void Graph::livingMembers(Graph *g, int dimension) {
     int i = 0;
     switch(dimension) {
         case 0:
-            for (i = 0; i < (int) g->Faces()->size(); i++){
-                if(g->getVertices()->at(i).Degree() == 1 && g->getVertices()->at(i).Destroyed() == false){
+            g->FreePoints()->clear();
+            for (i = 0; i < (int) g->getVertices()->size(); i++){
+                if (g->getVertices()->at(i).Destroyed() == false){
                     g->FreePoints()->push_back(&(g->getVertices()->at(i)));
                 }
             }
             break;
         case 1:
-            for(i = 0; i < (int) g->Faces()->size(); i++){
-                if(g->getEdges()->at(i).Degree() == 1 && g->getEdges()->at(i).Destroyed() == false){
+            g->FreeEdges()->clear();
+            for(i = 0; i < (int) g->getEdges()->size(); i++){
+                if (g->getEdges()->at(i).Destroyed() == false){
                     g->FreeEdges()->push_back(&(g->getEdges()->at(i)));
                 }
             }
             break;
         case 2:
-            cout << g->Faces()->size() << endl;
+            g->FreeFaces()->clear();
             for (i = 0; i < (int) g->Faces()->size(); i++) {
-                if (g->Faces()->at(i).Degree() == 1 && g->Faces()->at(i).Destroyed() == false){
+                if (g->Faces()->at(i).Destroyed() == false){
                     g->FreeFaces()->push_back(&(g->Faces()->at(i)));
                 }
             }
@@ -373,35 +348,60 @@ bool Graph::kill(Graph *g, int dimension) {
     //vector<Edge>::iterator it2;
     switch(dimension) {
         case 0:
-            if(g->FreeEdges()->at(0)->A()->Degree() == 1){
+            if(g->FreeEdges()->at(0)->A()->Degree() == 1 && !g->FreeEdges()->at(0)->A()->Destroyed()) {
+                g->FreeEdges()->at(0)->A()->DegreeMM();
+                g->FreeEdges()->at(0)->B()->DegreeMM();
                 g->FreeEdges()->at(0)->A()->Destroy();
                 g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->A()), g->FreePoints()->end());
                 g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
                 return true;
             }
-            else if(g->FreeEdges()->at(0)->B()->Degree() == 1){
-
+            else if(g->FreeEdges()->at(0)->B()->Degree() == 1 && !g->FreeEdges()->at(0)->B()->Destroyed()) {
+                g->FreeEdges()->at(0)->A()->DegreeMM();
+                g->FreeEdges()->at(0)->B()->DegreeMM();
                 g->FreeEdges()->at(0)->B()->Destroy();
                 g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->B()), g->FreePoints()->end());
                 g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
                 return true;
             }
+            break;
         case 1:
-            if(g->FreeFaces()->at(0)->E1()->Degree() == 1){
+            if(g->FreeFaces()->at(0)->E1()->Degree() == 1 && !g->FreeFaces()->at(0)->E1()->Destroyed()){
+                //cout << ">>> teste1" << endl;
+                g->FreeFaces()->at(0)->E1()->DegreeMM();
+                g->FreeFaces()->at(0)->E2()->DegreeMM();
+                g->FreeFaces()->at(0)->E3()->DegreeMM();
                 g->FreeFaces()->at(0)->E1()->Destroy();
+                g->FreeFaces()->at(0)->E1()->A()->DegreeMM();
+                g->FreeFaces()->at(0)->E1()->B()->DegreeMM();
                 g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E1()), g->FreeEdges()->end());
+                g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                 return true;
             }
             else {
-                if(g->FreeFaces()->at(0)->E2()->Degree() == 1){
+                if(g->FreeFaces()->at(0)->E2()->Degree() == 1 && !g->FreeFaces()->at(0)->E2()->Destroyed()){
+                    //cout << ">>> teste2" << endl;
+                    g->FreeFaces()->at(0)->E1()->DegreeMM();
+                    g->FreeFaces()->at(0)->E2()->DegreeMM();
+                    g->FreeFaces()->at(0)->E3()->DegreeMM();
                     g->FreeFaces()->at(0)->E2()->Destroy();
+                    g->FreeFaces()->at(0)->E2()->A()->DegreeMM();
+                    g->FreeFaces()->at(0)->E2()->B()->DegreeMM();
                     g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E2()), g->FreeEdges()->end());
+                    g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                     return true;
                 }
                 else {
-                    if(g->FreeFaces()->at(0)->E3()->Degree() == 1){
+                    if(g->FreeFaces()->at(0)->E3()->Degree() == 1 && !g->FreeFaces()->at(0)->E3()->Destroyed()){
+                        //cout << ">>> teste3 " << g->FreeEdges()->size() << endl;
+                        g->FreeFaces()->at(0)->E1()->DegreeMM();
+                        g->FreeFaces()->at(0)->E2()->DegreeMM();
+                        g->FreeFaces()->at(0)->E3()->DegreeMM();
                         g->FreeFaces()->at(0)->E3()->Destroy();
+                        g->FreeFaces()->at(0)->E3()->A()->DegreeMM();
+                        g->FreeFaces()->at(0)->E3()->B()->DegreeMM();
                         g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E3()), g->FreeEdges()->end());
+                        g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                         return true;
                     }
                 }
@@ -418,16 +418,20 @@ bool Graph::kill(Graph *g, int dimension) {
 void Graph::killCrit(Graph *g, int dimension) {
     switch (dimension) {
         case 1:
-            g->getEdges()->at(0).A()->DegreeMM();
-            g->getEdges()->at(0).B()->DegreeMM();
-            g->getEdges()->erase(remove(g->getEdges()->begin(), g->getEdges()->end(), g->getEdges()->at(0)), g->getEdges()->end());
+            g->FreeEdges()->at(0)->A()->DegreeMM();
+            g->FreeEdges()->at(0)->B()->DegreeMM();
+            g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
             g->critEdges++;
         break;
         case 2:
-            g->Faces()->at(0).E1()->DegreeMM();
-            g->Faces()->at(0).E2()->DegreeMM();
-            g->Faces()->at(0).E3()->DegreeMM();
-            //g->Faces()->erase(remove(g->Faces()->begin(), g->Faces()->end(), g->Faces()->at(0)), g->Faces()->end());
+            g->FreeFaces()->at(0)->E1()->DegreeMM();
+            g->FreeFaces()->at(0)->E2()->DegreeMM();
+            g->FreeFaces()->at(0)->E3()->DegreeMM();
+            //cout << typeid(g->Faces()->at(0)).name() << endl;
+            //g->FreeFaces()->at(0)->E1()->print();
+            //g->FreeFaces()->at(0)->E2()->print();
+            //g->FreeFaces()->at(0)->E3()->print();
+            g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
             g->critFaces++;
         break;
     }
@@ -438,24 +442,43 @@ void Graph::collapse(){
     int i = 0 ;
     int j = 0;
     g2 = copy(this);
-    findFreeMembers(g2, 2);
-    while(g2->Faces()->size() > 0 && j < 2 ) {
+    livingMembers(g2, 2);
+    while(g2->FreeFaces()->size() > 0) {
         j++;
-        printf("Still has Members: %lu\n", g2->Faces()->size());
+        printf("Still has Members: %lu\n", g2->FreeFaces()->size());
         i = 0;
-        while(freeMembersLeft(g2, 2) && i < 3) {
+        while(freeMembersLeft(g2, 2)) {
             i++;
             printf(">>Still has free members\n");
             if (!kill(g2, 1)) {
                 printf(">>>>I'm removing it\n");
                 killCrit(g2, 2);
-                findFreeMembers(g2, 2);
+                livingMembers(g2, 1);
             }
             else{
                 printf(">>>>SUCCESSFULLY KILLED\n");
             }
         }
     }
+    livingMembers(g2, 1);
+    while(g2->FreeEdges()->size() > 0) {
+        j++;
+        printf("Still has Members: %lu\n", g2->FreeEdges()->size());
+        i = 0;
+        while(freeMembersLeft(g2, 1)) {
+            i++;
+            printf(">>Still has free members\n");
+            if (!kill(g2, 0)) {
+                printf(">>>>I'm removing it\n");
+                killCrit(g2, 1);
+                livingMembers(g2, 0);
+            }
+            else{
+                printf(">>>>SUCCESSFULLY KILLED\n");
+            }
+        }
+    }
+    cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << endl;
 }
 
 void Graph::calc(streambuf *backup, streambuf *out) {
@@ -474,7 +497,7 @@ void Graph::calc(streambuf *backup, streambuf *out) {
         minx = 0, maxx = 0, miny = 0, maxy = 0;
 
     ifstream infile("teste2");
-    
+
     //cout.rdbuf(out);
 
     n = 0;
@@ -585,7 +608,7 @@ void Graph::calc(streambuf *backup, streambuf *out) {
         }
     }
 
-    //this->collapse();
+    this->collapse();
 
     delete radius;
 

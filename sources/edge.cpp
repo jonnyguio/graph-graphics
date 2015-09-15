@@ -94,7 +94,7 @@ bool Edge::operator==(const Edge& e) {
 }
 
 void Edge::print() {
-    cout << "Index: " << this->index << "\t(" << this->a->Index() << ", " << this->b->Index() << ") - Distance: " << this->dist << endl;
+    cout << "Index: " << this->index << "\t(" << this->a->Index() << ", " << this->b->Index() << ") - Distance: " << this->dist << " - Degree: " << this->degree << endl;
     //this->a->print();
     //this->b->print();
 }

@@ -35,6 +35,10 @@ Face::~Face() {
     //cout << "Destroying face: " << this->index << endl;
 }
 
+bool Face::operator==(const Face& f) {
+    return (this->e1 == f.E1() && this->e2 == f.E2() && this->e3 == f.E3());
+}
+
 void Face::Index(int index) {
     this->index = index;
 }
@@ -63,15 +67,15 @@ int Face::DegreeMM(){
     return --this->degree;
 }
 
-Edge* Face::E1(){
+Edge* Face::E1() const{
     return this->e1;
 }
 
-Edge* Face::E2(){
+Edge* Face::E2() const{
     return this->e2;
 }
 
-Edge* Face::E3(){
+Edge* Face::E3() const{
     return this->e3;
 }
 
