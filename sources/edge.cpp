@@ -110,4 +110,4 @@ float Edge::distance() {
         sqrt(sum);
 }
 
-template class vector<Edge>;
+template class std::vector<Edge>;

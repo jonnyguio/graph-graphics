@@ -91,4 +91,4 @@ bool Point::operator==(const Point& p) {
     return (this->coordinates == p.Coordinates());
 }
 
-template class vector<Point>;
+template class std::vector<Point>;

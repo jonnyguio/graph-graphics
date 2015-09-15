@@ -79,4 +79,4 @@ int Face::Index() {
     return this->index;
 }
 
-template class vector<Face>;
+template class std::vector<Face>;

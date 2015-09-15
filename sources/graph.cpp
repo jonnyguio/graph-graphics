@@ -415,13 +415,24 @@ void Graph::killCrit(Graph *g, int dimension) {
 
 void Graph::collapse(){
     Graph* g2;
+    int i = 0 ;
+    int j = 0;
     g2 = copy(this);
     findFreeMembers(g2, 2);
-    while(g2->Faces()->size() > 0) {
-        while(freeMembersLeft(g2, 2)) {
+    while(g2->Faces()->size() > 0 && j < 2 ) {
+        j++;
+        printf("Still has Members: %lu\n", g2->Faces()->size());
+        i = 0;
+        while(freeMembersLeft(g2, 2) && i < 3) {
+            i++;
+            printf(">>Still has free members\n");
             if (!kill(g2, 1)) {
+                printf(">>>>I'm removing it\n");
                 killCrit(g2, 2);
                 findFreeMembers(g2, 2);
+            }
+            else{
+                printf(">>>>SUCCESSFULLY KILLED\n");
             }
         }
     }

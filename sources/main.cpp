@@ -10,6 +10,8 @@
 
 #include "../headers/radius.h"
 
+#include "../headers/main.h"
+
 #define MAXPOINT 10000
 
 using namespace std;
@@ -18,7 +20,7 @@ bool EdgeCompare(Edge e1, Edge e2) {
     return e1.Dist() > e2.Dist();
 }
 
-int main () {
+int Main::mainCalculations() {
 
     vector<Point>
         *points;
@@ -33,12 +35,11 @@ int main () {
         *radius;
 
     int
-        n, t, i, j, k, fSize, eSize, vSize;
+        n, i, j, k, fSize, eSize, vSize;
 
     float
         x, y,
-        minx = 0, maxx = 0, miny = 0, maxy = 0,
-        used;
+        minx = 0, maxx = 0, miny = 0, maxy = 0;
 
     clock_t
         start, end;
@@ -162,7 +163,7 @@ int main () {
         }
     }
 
-    graph->collapse();
+    //graph->collapse();
 
 
     end = clock();

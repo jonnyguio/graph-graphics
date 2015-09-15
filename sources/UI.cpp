@@ -1,5 +1,6 @@
 #include <GLUT/GLUT.h>
 #include <iostream>
+#include "../headers/main.h"
 
 void render(void);
 
@@ -7,7 +8,7 @@ void keyboard(unsigned char c, int x, int y);
 
 void mouse(int button, int state, int x, int y);
 
-bool next = false;
+bool drawFaces = false;
 
 int main(int argc, char** argv){
 	printf("Press ESC or Right Click to quit.\n");
@@ -27,6 +28,9 @@ int main(int argc, char** argv){
 void keyboard(unsigned char c, int x, int y){
 	if(c == 27 /*ESC*/){
 		exit(0);
+	}
+	if(c == 32 /*ESC*/){
+		glutPostRedisplay();	
 	}
 }
 
@@ -100,7 +104,8 @@ void render(void){
 	drawEdge(2, 0.0, 0.0, 12.0, 5.0, 0, 0, 210);//e2: v0 -- v3
 
 	//Change next to true in order to see the faces
-	if(next){
+	
+	if(drawFaces){	
 		drawFace(2.0, 2.0, 3.0, 4.0, 12.0, 5.0, 42, 0, 147);//f1: e3 -- e5 -- e4
 		drawFace(0.0, 0.0, 3.0, 4.0, 12.0, 5.0, 24, 0, 189);//f2: e1 -- e5 -- e2
 		drawFace(0.0, 0.0, 2.0, 2.0, 12.0, 5.0, 0, 0, 255);//f3: e0 -- e4 -- e2
@@ -108,6 +113,5 @@ void render(void){
 		drawFace(2.0, 2.0, 3.0, 4.0, 12.0, 5.0, 42, 0, 147);//f1: e3 -- e5 -- e4
 		drawFace(0.0, 0.0, 2.0, 2.0, 3.0, 4.0, 168, 0, 42);//f0: e0 -- e3 -- e1
 	}
-	
     glutSwapBuffers();
 }
