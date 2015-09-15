@@ -213,7 +213,7 @@ void Graph::connect(Radius *r, Point *a, Point *b) {
 
     it = find (this->edges->begin(), this->edges->end(), Edge(a,b));
 
-    if ((a->distance(b) / 2 < r->getRadius() && it == this->edges->end()) || r->getRadius() == -1) {
+    if ((a->distance(b) / 2 <= r->getRadius() && it == this->edges->end()) || r->getRadius() == -1) {
         this->edges->push_back(*(new Edge(a, b)));
         this->edges->at(this->edges->size() - 1).A()->DegreePP();
         this->edges->at(this->edges->size() - 1).B()->DegreePP();
@@ -348,61 +348,65 @@ bool Graph::kill(Graph *g, int dimension) {
     //vector<Edge>::iterator it2;
     switch(dimension) {
         case 0:
-            if(g->FreeEdges()->at(0)->A()->Degree() == 1 && !g->FreeEdges()->at(0)->A()->Destroyed()) {
-                g->FreeEdges()->at(0)->A()->DegreeMM();
-                g->FreeEdges()->at(0)->B()->DegreeMM();
-                g->FreeEdges()->at(0)->A()->Destroy();
-                g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->A()), g->FreePoints()->end());
-                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
-                return true;
-            }
-            else if(g->FreeEdges()->at(0)->B()->Degree() == 1 && !g->FreeEdges()->at(0)->B()->Destroyed()) {
-                g->FreeEdges()->at(0)->A()->DegreeMM();
-                g->FreeEdges()->at(0)->B()->DegreeMM();
-                g->FreeEdges()->at(0)->B()->Destroy();
-                g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(0)->B()), g->FreePoints()->end());
-                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
-                return true;
+            for (int i = 0; i < g->FreeEdges()->size(); i++) {
+                if(g->FreeEdges()->at(i)->A()->Degree() == 1 && !g->FreeEdges()->at(i)->A()->Destroyed()) {
+                    g->FreeEdges()->at(i)->A()->DegreeMM();
+                    g->FreeEdges()->at(i)->B()->DegreeMM();
+                    g->FreeEdges()->at(i)->A()->Destroy();
+                    g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(i)->A()), g->FreePoints()->end());
+                    g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(i)), g->FreeEdges()->end());
+                    return true;
+                }
+                else if(g->FreeEdges()->at(i)->B()->Degree() == 1 && !g->FreeEdges()->at(i)->B()->Destroyed()) {
+                    g->FreeEdges()->at(i)->A()->DegreeMM();
+                    g->FreeEdges()->at(i)->B()->DegreeMM();
+                    g->FreeEdges()->at(i)->B()->Destroy();
+                    g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(i)->B()), g->FreePoints()->end());
+                    g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(i)), g->FreeEdges()->end());
+                    return true;
+                }
             }
             break;
         case 1:
-            if(g->FreeFaces()->at(0)->E1()->Degree() == 1 && !g->FreeFaces()->at(0)->E1()->Destroyed()){
-                //cout << ">>> teste1" << endl;
-                g->FreeFaces()->at(0)->E1()->DegreeMM();
-                g->FreeFaces()->at(0)->E2()->DegreeMM();
-                g->FreeFaces()->at(0)->E3()->DegreeMM();
-                g->FreeFaces()->at(0)->E1()->Destroy();
-                g->FreeFaces()->at(0)->E1()->A()->DegreeMM();
-                g->FreeFaces()->at(0)->E1()->B()->DegreeMM();
-                g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E1()), g->FreeEdges()->end());
-                g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
-                return true;
-            }
-            else {
-                if(g->FreeFaces()->at(0)->E2()->Degree() == 1 && !g->FreeFaces()->at(0)->E2()->Destroyed()){
-                    //cout << ">>> teste2" << endl;
+            for (int i = 0; i < g->FreeEdges()->size(); i++) {
+                if(g->FreeFaces()->at(0)->E1()->Degree() == 1 && !g->FreeFaces()->at(0)->E1()->Destroyed()){
+                    //cout << ">>> teste1" << endl;
                     g->FreeFaces()->at(0)->E1()->DegreeMM();
                     g->FreeFaces()->at(0)->E2()->DegreeMM();
                     g->FreeFaces()->at(0)->E3()->DegreeMM();
-                    g->FreeFaces()->at(0)->E2()->Destroy();
-                    g->FreeFaces()->at(0)->E2()->A()->DegreeMM();
-                    g->FreeFaces()->at(0)->E2()->B()->DegreeMM();
-                    g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E2()), g->FreeEdges()->end());
+                    g->FreeFaces()->at(0)->E1()->Destroy();
+                    g->FreeFaces()->at(0)->E1()->A()->DegreeMM();
+                    g->FreeFaces()->at(0)->E1()->B()->DegreeMM();
+                    g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E1()), g->FreeEdges()->end());
                     g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                     return true;
                 }
                 else {
-                    if(g->FreeFaces()->at(0)->E3()->Degree() == 1 && !g->FreeFaces()->at(0)->E3()->Destroyed()){
-                        //cout << ">>> teste3 " << g->FreeEdges()->size() << endl;
+                    if(g->FreeFaces()->at(0)->E2()->Degree() == 1 && !g->FreeFaces()->at(0)->E2()->Destroyed()){
+                        //cout << ">>> teste2" << endl;
                         g->FreeFaces()->at(0)->E1()->DegreeMM();
                         g->FreeFaces()->at(0)->E2()->DegreeMM();
                         g->FreeFaces()->at(0)->E3()->DegreeMM();
-                        g->FreeFaces()->at(0)->E3()->Destroy();
-                        g->FreeFaces()->at(0)->E3()->A()->DegreeMM();
-                        g->FreeFaces()->at(0)->E3()->B()->DegreeMM();
-                        g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E3()), g->FreeEdges()->end());
+                        g->FreeFaces()->at(0)->E2()->Destroy();
+                        g->FreeFaces()->at(0)->E2()->A()->DegreeMM();
+                        g->FreeFaces()->at(0)->E2()->B()->DegreeMM();
+                        g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E2()), g->FreeEdges()->end());
                         g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                         return true;
+                    }
+                    else {
+                        if(g->FreeFaces()->at(0)->E3()->Degree() == 1 && !g->FreeFaces()->at(0)->E3()->Destroyed()){
+                            //cout << ">>> teste3 " << g->FreeEdges()->size() << endl;
+                            g->FreeFaces()->at(0)->E1()->DegreeMM();
+                            g->FreeFaces()->at(0)->E2()->DegreeMM();
+                            g->FreeFaces()->at(0)->E3()->DegreeMM();
+                            g->FreeFaces()->at(0)->E3()->Destroy();
+                            g->FreeFaces()->at(0)->E3()->A()->DegreeMM();
+                            g->FreeFaces()->at(0)->E3()->B()->DegreeMM();
+                            g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E3()), g->FreeEdges()->end());
+                            g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
+                            return true;
+                        }
                     }
                 }
             }
@@ -449,7 +453,7 @@ void Graph::collapse(){
         i = 0;
         while(freeMembersLeft(g2, 2)) {
             i++;
-            printf(">>Still has free members\n");
+            printf(">>Still has faces\n");
             if (!kill(g2, 1)) {
                 printf(">>>>I'm removing it\n");
                 killCrit(g2, 2);
@@ -467,7 +471,7 @@ void Graph::collapse(){
         i = 0;
         while(freeMembersLeft(g2, 1)) {
             i++;
-            printf(">>Still has free members\n");
+            printf(">>Still has edges\n");
             if (!kill(g2, 0)) {
                 printf(">>>>I'm removing it\n");
                 killCrit(g2, 1);
@@ -478,7 +482,7 @@ void Graph::collapse(){
             }
         }
     }
-    cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << endl;
+    cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
 }
 
 void Graph::calc(streambuf *backup, streambuf *out) {
@@ -532,16 +536,17 @@ void Graph::calc(streambuf *backup, streambuf *out) {
         }
     }
 
-    //this->print();
+    radius = new Radius(0, 0.5);
 
-    radius = new Radius(-1, -1);
-
-    i = 0;
-
-    for (vector<Point>::iterator it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it) {
-        for (vector<Point>::iterator it2 = this->getVertices()->begin() + ++i; it2 != this->getVertices()->end(); ++it2) {
-            this->connect(radius, &(*it), &(*it2));
+    vector<Point>::iterator it, it2;
+    while (radius->getRadius() <= 1) {
+        i = 0;
+        for (it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it) {
+            for (it2 = this->getVertices()->begin() + ++i; it2 != this->getVertices()->end(); ++it2) {
+                this->connect(radius, &(*it), &(*it2));
+            }
         }
+        radius->increase();
     }
 
     sort(this->getEdges()->begin(), this->getEdges()->end(), compare);

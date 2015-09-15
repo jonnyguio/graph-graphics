@@ -14,9 +14,8 @@ float Radius::getRadius() {
     return this->radius;
 }
 
-float Radius::increase() {
+void Radius::increase() {
     this->radius += this->rate;
-    return this->radius;
 }
 
 float Radius::Rate() {

@@ -14,7 +14,7 @@ class Radius {
 
         float getRadius();
 
-        float increase();
+        void increase();
 
         float Rate();
 
