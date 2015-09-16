@@ -114,6 +114,7 @@ class Graph {
 
         bool findEdge(vector<Edge>, int, Edge);
 
+        static vector<Point> verticesFromFace(Edge e1, Edge e2, Edge e3);
 
         //Collapse
         void collapse();

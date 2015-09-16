@@ -15,6 +15,7 @@
 using namespace std;
 
 bool UIHandler::drawFaces = false;
+bool UIHandler::step = 0;
 
 int main(int argc, char** argv) {
 

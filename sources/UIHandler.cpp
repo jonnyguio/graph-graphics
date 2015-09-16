@@ -22,7 +22,7 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 	if(c == 27 /*ESC*/){
 		exit(0);
 	}
-	if(c == 46 /*ESC*/){
+	if(c == 46 /* > */){
 		drawFaces = !drawFaces;
 		glutPostRedisplay();
 	}
@@ -43,6 +43,12 @@ void UIHandler::drawEdge(float width, float x1, float y1, float x2, float y2, in
     glEnd();
 }
 
+void UIHandler::drawEdge(float width, Edge* e, int R, int G, int B){
+	vector<float> v1 = e->A()->Coordinates();
+	vector<float> v2 = e->B()->Coordinates();
+	drawEdge(width, v1[0], v1[1], v2[0], v2[1], int R, int G, int B);
+}
+
 void UIHandler::drawFace(float x1, float y1, float x2, float y2, float x3, float y3, int R, int G, int B){
 	glLineWidth(1);
 	glColor3ub( R, G, B );
@@ -53,8 +59,50 @@ void UIHandler::drawFace(float x1, float y1, float x2, float y2, float x3, float
 	glEnd();
 }
 
-void UIHandler::drawGraph(){
-	//To be done
+void UIHandler::drawFace(Edge e1, Edge e2, Edge e3, int R, int G, int B){
+	vector<Point> vertices = Graph::verticesFromFace(e1, e2, e3);
+	vector<float> v1 = vertices[0]->Coordinates();
+	vector<float> v2 = vertices[1]->Coordinates();
+	vector<float> v3 = vertices[2]->Coordinates();
+	drawFace(v1[0], v1[1], v2[0], v2[1], v3[0], v3[1], int R, int G, int B);
+}
+
+void UIHandler::drawFace(Face *f, int R, int G, int B){
+	drawFace(f->E1(), f->E2(), f->E3(), int R, int G, int B);
+}
+
+void UIHandler::drawGraph(Graph g){
+	int vSize = g->getVertices()->size();
+    int eSize = g->getEdges()->size();
+    int fSize = g->Faces()->size();
+
+    for(i = 0, j = 0, step = 0; (i < eSize || j < fSize) && (i+j) < step;) {
+        if (i < eSize && g->getEdges()->at(eSize - i - 1).printed == false) {
+
+            g->getEdges()->at(eSize - i - 1).printed = true;
+            printf("e%d: v%d -- v%d\n",
+                g->getEdges()->at(eSize - i - 1).Index(),
+                g->getEdges()->at(eSize - i - 1).A()->Index(),
+                g->getEdges()->at(eSize - i - 1).B()->Index());
+            i++;
+        }
+        while (
+        (i+j) < step
+        && j < fSize
+        && g->Faces()->at(j).E1()->printed
+        && g->Faces()->at(j).E2()->printed
+        && g->Faces()->at(j).E3()->printed
+        ) {
+            g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
+
+            printf("f%d: e%d -- e%d -- e%d\n",
+                g->Faces()->at(j).Index(),
+                g->Faces()->at(j).E1()->Index(),
+                g->Faces()->at(j).E2()->Index(),
+                g->Faces()->at(j).E3()->Index());
+            j++;
+        }
+    }
 }
 
 void UIHandler::render(void){
