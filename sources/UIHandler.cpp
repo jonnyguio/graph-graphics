@@ -1,8 +1,15 @@
 #include <GLUT/GLUT.h>
 #include <iostream>
+#include "../headers/Graph.h"
 #include "../headers/UIHandler.h"
 
-int UIHandler::init(int argc, char** argv){
+using namespace std;
+
+void setMainGraph(Graph g){
+	UIHandler::mainGraph = g;
+}
+
+void UIHandler::init(int argc, char** argv){
 	//UIHandler::drawFaces = false;
 	printf("Press ESC or Right Click to quit.\n");
 	glutInit(&argc, argv);
@@ -23,9 +30,19 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 		exit(0);
 	}
 	if(c == 46 /* > */){
-		drawFaces = !drawFaces;
+		//drawFaces = !drawFaces;
+		step++;
 		glutPostRedisplay();
 	}
+
+	if(c == 45 /* < */){
+		//drawFaces = !drawFaces;
+		if(step > 0){
+			step--;
+		}
+		glutPostRedisplay();
+	}
+
 }
 
 void UIHandler::mouse(int button, int state, int x, int y){
@@ -46,7 +63,7 @@ void UIHandler::drawEdge(float width, float x1, float y1, float x2, float y2, in
 void UIHandler::drawEdge(float width, Edge* e, int R, int G, int B){
 	vector<float> v1 = e->A()->Coordinates();
 	vector<float> v2 = e->B()->Coordinates();
-	drawEdge(width, v1[0], v1[1], v2[0], v2[1], int R, int G, int B);
+	drawEdge(width, v1[0], v1[1], v2[0], v2[1], R, G, B);
 }
 
 void UIHandler::drawFace(float x1, float y1, float x2, float y2, float x3, float y3, int R, int G, int B){
@@ -59,19 +76,21 @@ void UIHandler::drawFace(float x1, float y1, float x2, float y2, float x3, float
 	glEnd();
 }
 
-void UIHandler::drawFace(Edge e1, Edge e2, Edge e3, int R, int G, int B){
-	vector<Point> vertices = Graph::verticesFromFace(e1, e2, e3);
+void UIHandler::drawFace(Edge* e1, Edge* e2, Edge* e3, int R, int G, int B){
+	vector<Point*> vertices = Graph::verticesFromFace(e1, e2, e3);
 	vector<float> v1 = vertices[0]->Coordinates();
 	vector<float> v2 = vertices[1]->Coordinates();
 	vector<float> v3 = vertices[2]->Coordinates();
-	drawFace(v1[0], v1[1], v2[0], v2[1], v3[0], v3[1], int R, int G, int B);
+	drawFace(v1[0], v1[1], v2[0], v2[1], v3[0], v3[1], R, G, B);
 }
 
 void UIHandler::drawFace(Face *f, int R, int G, int B){
-	drawFace(f->E1(), f->E2(), f->E3(), int R, int G, int B);
+	drawFace(f->E1(), f->E2(), f->E3(), R, G, B);
 }
 
-void UIHandler::drawGraph(Graph g){
+void UIHandler::drawGraph(Graph* g){
+	int i = 0;
+	int j = 0;
 	int vSize = g->getVertices()->size();
     int eSize = g->getEdges()->size();
     int fSize = g->Faces()->size();
@@ -80,10 +99,7 @@ void UIHandler::drawGraph(Graph g){
         if (i < eSize && g->getEdges()->at(eSize - i - 1).printed == false) {
 
             g->getEdges()->at(eSize - i - 1).printed = true;
-            printf("e%d: v%d -- v%d\n",
-                g->getEdges()->at(eSize - i - 1).Index(),
-                g->getEdges()->at(eSize - i - 1).A()->Index(),
-                g->getEdges()->at(eSize - i - 1).B()->Index());
+            drawEdge(2, &(g->getEdges()->at(eSize - i - 1)), 255, 255, 255);
             i++;
         }
         while (
@@ -94,12 +110,7 @@ void UIHandler::drawGraph(Graph g){
         && g->Faces()->at(j).E3()->printed
         ) {
             g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
-
-            printf("f%d: e%d -- e%d -- e%d\n",
-                g->Faces()->at(j).Index(),
-                g->Faces()->at(j).E1()->Index(),
-                g->Faces()->at(j).E2()->Index(),
-                g->Faces()->at(j).E3()->Index());
+        	drawFace(&(g->Faces()->at(j)), 100, 150, 150);
             j++;
         }
     }
@@ -135,7 +146,7 @@ void UIHandler::render(void){
 	//e2: v0 -- v3
 	//f2: e1 -- e5 -- e2
 	//f3: e0 -- e4 -- e2
-
+/*
 	drawEdge(2, 0.0, 0.0, 2.0, 2.0, 210, 0, 0);//e0: v0 -- v1
 	drawEdge(2, 2.0, 2.0, 3.0, 4.0, 168, 0, 42);//e3: v1 -- v2
 	drawEdge(2, 0.0, 0.0, 3.0, 4.0, 126, 0, 84);//e1: v0 -- v2
@@ -155,5 +166,7 @@ void UIHandler::render(void){
 		drawFace(2.0, 2.0, 3.0, 4.0, 12.0, 5.0, 42, 0, 147);//f1: e3 -- e5 -- e4
 		drawFace(0.0, 0.0, 2.0, 2.0, 3.0, 4.0, 168, 0, 42);//f0: e0 -- e3 -- e1
 	}
+*/
+
     glutSwapBuffers();
 }

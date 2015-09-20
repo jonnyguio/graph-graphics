@@ -15,7 +15,7 @@
 using namespace std;
 
 bool UIHandler::drawFaces = false;
-bool UIHandler::step = 0;
+int UIHandler::step = 0;
 
 int main(int argc, char** argv) {
 
@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
     graph->calc(backup, out);
 
     UIHandler::init(argc, argv);
+    UIHandler::setMainGraph(*graph);
     glutMainLoop();
 
     end = clock();

@@ -187,10 +187,10 @@ bool Graph::findInt(vector<int> v, int size, int toFind) {
 	return false;
 }
 
-bool Graph::findPoint(vector<Point> v, int size, Point toFind) {
+bool Graph::findPoint(vector<Point*> v, int size, Point* toFind) {
     int i;
     for(i = 0; i<size; i++) {
-        if(&v.at(i) == &toFind) {
+        if(v.at(i) == toFind) {
             return true;
         }
     }
@@ -271,26 +271,27 @@ bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
 	}
 }
 
-vector<Point> Graph::verticesFromFace(Edge e1, Edge e2, Edge e3) {
-    vector<int> v, v2;
-    vector<Point> v3;
+
+vector<Point*> Graph::verticesFromFace(Edge* e1, Edge* e2, Edge* e3) {
+    vector<int>v2;
+    vector<Point*> v, v3;
     int i;
 
-    v.push_back(e1.A());
-    v.push_back(e1.B());
-    v.push_back(e2.A());
-    v.push_back(e2.B());
-    v.push_back(e3.A());
-    v.push_back(e3.B());
+    v.push_back(e1->A());
+    v.push_back(e1->B());
+    v.push_back(e2->A());
+    v.push_back(e2->B());
+    v.push_back(e3->A());
+    v.push_back(e3->B());
 
     for(i = 0; i < 6; i++) {
-        if (!findInt(v2, v2.size(), v[i]->Index())) {
-            v2.push_back(v[i]->Index());
+        if (!findPoint(v3, v3.size(), v[i])) {
             v3.push_back(v[i]);
         }
     }
     return v3;
 }
+
 
 Graph* Graph::copy(Graph *g1){
   Graph* temp = new Graph(g1->Index(), g1->getVertices(), g1->getEdges(), g1->Faces());
