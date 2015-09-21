@@ -5,10 +5,6 @@
 
 using namespace std;
 
-void setMainGraph(Graph g){
-	UIHandler::mainGraph = g;
-}
-
 void UIHandler::init(int argc, char** argv){
 	//UIHandler::drawFaces = false;
 	printf("Press ESC or Right Click to quit.\n");
@@ -49,6 +45,10 @@ void UIHandler::mouse(int button, int state, int x, int y){
 	if(button == GLUT_RIGHT_BUTTON){
 		exit(0);
 	}
+}
+
+void UIHandler::setMainGraph(Graph g){
+	UIHandler::mainGraph = g;
 }
 
 void UIHandler::drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B){
