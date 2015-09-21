@@ -50,21 +50,21 @@ class Graph {
         ~Graph();
 
         // GETTERS AND SETTERS
-        vector<Point>* getVertices(void);
+        vector<Point>* Points(void);
 
         vector<Point*>* FreePoints(void);
 
-        void addVertice(Point*);
+        void addPoint(Point*);
 
-        void setVertices(vector<Point>*);
+        void setPoints(vector<Point>*);
 
-        vector<Edge>* getEdges(void);
+        vector<Edge>* Edges(void);
 
         vector<Edge*>* FreeEdges(void);
 
-        void setEdges(vector<Edge>*);
-
         void addEdge(Edge*);
+
+        void setEdges(vector<Edge>*);
 
         vector<Face>* Faces();
 

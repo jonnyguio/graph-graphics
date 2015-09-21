@@ -76,7 +76,7 @@ Graph::~Graph() {
     delete this->points;
 }
 
-vector<Point>* Graph::getVertices() {
+vector<Point>* Graph::Points() {
     return this->points;
 }
 
@@ -84,15 +84,15 @@ vector<Point*>* Graph::FreePoints() {
     return this->freePoints;
 }
 
-void Graph::setVertices(vector<Point>* points) {
+void Graph::setPoints(vector<Point>* points) {
     this->points = points;
 }
 
-void Graph::addVertice(Point *point) {
+void Graph::addPoint(Point *point) {
     this->points->push_back(*point);
 }
 
-vector<Edge>* Graph::getEdges() {
+vector<Edge>* Graph::Edges() {
     return this->edges;
 }
 
@@ -272,7 +272,7 @@ bool Graph::formsTri(Edge e1, Edge e2, Edge e3) {
 }
 
 Graph* Graph::copy(Graph *g1){
-  Graph* temp = new Graph(g1->Index(), g1->getVertices(), g1->getEdges(), g1->Faces());
+  Graph* temp = new Graph(g1->Index(), g1->Points(), g1->Edges(), g1->Faces());
   temp->CC(g1->CC());
   temp->HasConnected(g1->HasConnected());
   return temp;
@@ -283,17 +283,17 @@ void Graph::livingMembers(Graph *g, int dimension) {
     switch(dimension) {
         case 0:
             g->FreePoints()->clear();
-            for (i = 0; i < (int) g->getVertices()->size(); i++){
-                if (g->getVertices()->at(i).Destroyed() == false){
-                    g->FreePoints()->push_back(&(g->getVertices()->at(i)));
+            for (i = 0; i < (int) g->Points()->size(); i++){
+                if (g->Points()->at(i).Destroyed() == false){
+                    g->FreePoints()->push_back(&(g->Points()->at(i)));
                 }
             }
             break;
         case 1:
             g->FreeEdges()->clear();
-            for(i = 0; i < (int) g->getEdges()->size(); i++){
-                if (g->getEdges()->at(i).Destroyed() == false){
-                    g->FreeEdges()->push_back(&(g->getEdges()->at(i)));
+            for(i = 0; i < (int) g->Edges()->size(); i++){
+                if (g->Edges()->at(i).Destroyed() == false){
+                    g->FreeEdges()->push_back(&(g->Edges()->at(i)));
                 }
             }
             break;
@@ -519,7 +519,7 @@ void Graph::calc(streambuf *backup, streambuf *out) {
             //if (this) {
             point.push_back(x);
             point.push_back(y);
-            this->addVertice(new Point(++n, point));
+            this->addPoint(new Point(++n, point));
             point.clear();
                 //this->print();
             //}
@@ -541,15 +541,15 @@ void Graph::calc(streambuf *backup, streambuf *out) {
     vector<Point>::iterator it, it2;
     while (radius->getRadius() <= 1) {
         i = 0;
-        for (it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it) {
-            for (it2 = this->getVertices()->begin() + ++i; it2 != this->getVertices()->end(); ++it2) {
+        for (it = this->Points()->begin(); it != this->Points()->end(); ++it) {
+            for (it2 = this->Points()->begin() + ++i; it2 != this->Points()->end(); ++it2) {
                 this->connect(radius, &(*it), &(*it2));
             }
         }
         radius->increase();
     }
 
-    sort(this->getEdges()->begin(), this->getEdges()->end(), compare);
+    sort(this->Edges()->begin(), this->Edges()->end(), compare);
 
     this->print();
 
@@ -557,11 +557,11 @@ void Graph::calc(streambuf *backup, streambuf *out) {
     //this->setTriangles();
 
     i = 0;
-    for (vector<Edge>::iterator it = this->getEdges()->begin(); it != this->getEdges()->end(); ++it) {
+    for (vector<Edge>::iterator it = this->Edges()->begin(); it != this->Edges()->end(); ++it) {
         j = i++ + 1;
-        for (vector<Edge>::iterator it2 = this->getEdges()->begin() + j; it2 != this->getEdges()->end(); ++it2) {
+        for (vector<Edge>::iterator it2 = this->Edges()->begin() + j; it2 != this->Edges()->end(); ++it2) {
             k = j++ + 1;
-            for (vector<Edge>::iterator it3 = this->getEdges()->begin() + k; it3 != this->getEdges()->end(); ++it3) {
+            for (vector<Edge>::iterator it3 = this->Edges()->begin() + k; it3 != this->Edges()->end(); ++it3) {
                 if (this->formsTri(*it, *it2, *it3)) {
                     //cout << (*it).Index() << " " << (*it2).Index() << " " << (*it3).Index() << endl;
                     this->Faces()->push_back(*(new Face(++fSize, &(*it), &(*it2), &(*it3))));
@@ -574,26 +574,26 @@ void Graph::calc(streambuf *backup, streambuf *out) {
         }
     }
 
-    //reverse(this->getEdges()->begin(), this->getEdges()->end());
+    //reverse(this->Edges()->begin(), this->Edges()->end());
     reverse(this->Faces()->begin(), this->Faces()->end());
 
-    for (vector<Point>::iterator it = this->getVertices()->begin(); it != this->getVertices()->end(); ++it)
+    for (vector<Point>::iterator it = this->Points()->begin(); it != this->Points()->end(); ++it)
     {
         (*it).print();
     }
     cout << endl;
 
-    vSize = this->getVertices()->size();
-    eSize = this->getEdges()->size();
+    vSize = this->Points()->size();
+    eSize = this->Edges()->size();
 
     for(i = 0, j = 0; i < eSize || j < fSize;) {
-        if (i < eSize && this->getEdges()->at(eSize - i - 1).printed == false) {
+        if (i < eSize && this->Edges()->at(eSize - i - 1).printed == false) {
 
-            this->getEdges()->at(eSize - i - 1).printed = true;
+            this->Edges()->at(eSize - i - 1).printed = true;
             printf("e%d: v%d -- v%d\n",
-                this->getEdges()->at(eSize - i - 1).Index(),
-                this->getEdges()->at(eSize - i - 1).A()->Index(),
-                this->getEdges()->at(eSize - i - 1).B()->Index());
+                this->Edges()->at(eSize - i - 1).Index(),
+                this->Edges()->at(eSize - i - 1).A()->Index(),
+                this->Edges()->at(eSize - i - 1).B()->Index());
             i++;
         }
         while (
