@@ -315,16 +315,22 @@ Graph* Graph::copy(Graph *g, int step){
   //Quando damos um push_back uma cópia é feita
   //Porém dentro de cada objeto copiado a referência continua para a propriedade do objeto original
   //Por exemplo, copiamos uma Edge, mas os Points referenciados por ela continuam os mesmos da Edge original.
-  Graph* temp = new Graph(2);
-  int i, j;
+  Graph* temp = new Graph(g->Index());
+  int i, j, counter;
   int vSize = this->Points()->size();
   int eSize = this->Edges()->size();
   int fSize = this->Faces()->size();
 
   temp->setPoints(g->Points());
-  for(i = 0, j = 0; (i < eSize || j < fSize) && (i+j) < step;) {
+
+  for(i = 0; i < eSize; i++){
+    g->Edges()->at(eSize - i - 1).drawn = false;
+  }
+
+  for(i = 0, j = 0, counter = 0; counter < 3 && ((i < eSize || j < fSize) && (i+j) < step); counter++) {
         if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
             g->Edges()->at(eSize - i - 1).drawn = true;
+            cout << "Edges(" << eSize - i - 1 << ").drawn = " << g->Edges()->at(eSize - i - 1).drawn << endl;
             temp->Edges()->push_back(g->Edges()->at(eSize - i - 1));
             i++;
         }
@@ -510,6 +516,7 @@ void Graph::collapse(int step){
     Graph* g2;
     int i = 0 ;
     int j = 0;
+    cout << "About to copy" << endl;
     g2 = copy(this, step);
 
     //Reseting critical members
@@ -545,7 +552,7 @@ void Graph::collapse(int step){
         }
     }
     cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
-    delete g2;
+    //delete g2;
 }
 
 int Graph::calc(streambuf *backup, streambuf *out) {
@@ -680,6 +687,7 @@ int Graph::calc(streambuf *backup, streambuf *out) {
     totalSteps = i + j;
 
     for(i = 0; i < totalSteps; i++){
+        cout << "this many times: " << i << endl;
         this->collapse(i);    
     }
 

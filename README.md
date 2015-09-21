@@ -18,8 +18,8 @@ Beginning of the studies of big-data analysis with graph theory and the evolutio
        - Implementar "volta filme" - OK
    - Codes
        - Grafo
-           - Finalizar o colapso - OK
-           - Criar o filme (passos)
+           - Finalizar o colapso
+           - Criar o filme (passos) - OK
            - Melhorar a estrutura das Faces (colocar acesso direto aos vértices para otimizar a UI)
        - Criar exemplos bons
            - Círculo
@@ -29,6 +29,7 @@ Beginning of the studies of big-data analysis with graph theory and the evolutio
        - Limpar Código
 
 ## To Do:
+   - Finalizar colapso
    - Implementar Visual
    - Criar o Filme
    - Desenhar o filme
@@ -39,5 +40,4 @@ Beginning of the studies of big-data analysis with graph theory and the evolutio
 ## Done
    - Desenhar o Grafo
    - Implement drawGraph() function
-   - Finalizar colapso
    - Collapse per iteration (steps)
