@@ -330,7 +330,7 @@ Graph* Graph::copy(Graph *g, int step){
   for(i = 0, j = 0, counter = 0; counter < 3 && ((i < eSize || j < fSize) && (i+j) < step); counter++) {
         if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
             g->Edges()->at(eSize - i - 1).drawn = true;
-            cout << "Edges(" << eSize - i - 1 << ").drawn = " << g->Edges()->at(eSize - i - 1).drawn << endl;
+            //cout << "Edges(" << eSize - i - 1 << ").drawn = " << g->Edges()->at(eSize - i - 1).drawn << endl;
             temp->Edges()->push_back(g->Edges()->at(eSize - i - 1));
             i++;
         }
@@ -516,7 +516,7 @@ void Graph::collapse(int step){
     Graph* g2;
     int i = 0 ;
     int j = 0;
-    cout << "About to copy" << endl;
+
     g2 = copy(this, step);
 
     //Reseting critical members
@@ -551,6 +551,7 @@ void Graph::collapse(int step){
             }
         }
     }
+    g2->print();
     cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
     //delete g2;
 }
@@ -570,7 +571,7 @@ int Graph::calc(streambuf *backup, streambuf *out) {
         x, y,
         minx = 0, maxx = 0, miny = 0, maxy = 0;
 
-    ifstream infile("teste3");
+    ifstream infile("teste2");
 
     //cout.rdbuf(out);
 
