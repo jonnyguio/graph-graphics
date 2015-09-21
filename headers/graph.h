@@ -110,10 +110,11 @@ class Graph {
 
         bool findInt(vector<int>, int, int);
 
-        bool findPoint(vector<Point>, int, Point);
+        static bool findPoint(vector<Point*>, int, Point*);
 
         bool findEdge(vector<Edge>, int, Edge);
 
+        static vector<Point*> verticesFromFace(Edge* e1, Edge* e2, Edge* e3);
 
         //Collapse
         void collapse();
