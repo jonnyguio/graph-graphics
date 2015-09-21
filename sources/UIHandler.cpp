@@ -5,13 +5,16 @@
 
 using namespace std;
 
-void setMainGraph(Graph g){
-	UIHandler::mainGraph = g;
+Graph* UIHandler::mainGraph;
+
+void UIHandler::setMainGraph(Graph *g) {
+	mainGraph = g;
 }
 
-void UIHandler::init(int argc, char** argv){
+void UIHandler::init(int argc, char** argv, Graph *g) {
 	//UIHandler::drawFaces = false;
 	printf("Press ESC or Right Click to quit.\n");
+	mainGraph = g;
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
@@ -91,15 +94,15 @@ void UIHandler::drawFace(Face *f, int R, int G, int B){
 void UIHandler::drawGraph(Graph* g){
 	int i = 0;
 	int j = 0;
-	int vSize = g->getVertices()->size();
-    int eSize = g->getEdges()->size();
+	int vSize = g->Points()->size();
+    int eSize = g->Edges()->size();
     int fSize = g->Faces()->size();
 
     for(i = 0, j = 0, step = 0; (i < eSize || j < fSize) && (i+j) < step;) {
-        if (i < eSize && g->getEdges()->at(eSize - i - 1).printed == false) {
+        if (i < eSize && g->Edges()->at(eSize - i - 1).printed == false) {
 
-            g->getEdges()->at(eSize - i - 1).printed = true;
-            drawEdge(2, &(g->getEdges()->at(eSize - i - 1)), 255, 255, 255);
+            g->Edges()->at(eSize - i - 1).printed = true;
+            drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
             i++;
         }
         while (
@@ -130,6 +133,7 @@ void UIHandler::render(void){
     //glEnable(GL_LINE_SMOOTH);
     drawEdge(1, 0.0, 12.0, 0.0, -12.0, 255, 255, 255);
     drawEdge(1, -12.0, 0.0, 12.0, 0.0, 255, 255, 255);
+	drawGraph(mainGraph);
 
     //Sample graph
     //0 0
