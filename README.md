@@ -2,25 +2,23 @@
 Beginning of the studies of big-data analysis with graph theory and the evolution of sparse to complete graphs over time.
 
 ## To Do:
-   - Implement drawGraph() function
    - Plot C0, C1
-   - Collapse per iteration (steps)
    - Color graph according to cycles (critical members - Mainly Edges)
    - Collapse directions
    - Clean Code
 
 ## Stories
    - Gráfico (UI)
-       - Desenhar o Grafo
+       - Desenhar o Grafo - OK
        - Implementar Visual
        - Desenhar o Filme
        - Bônus: Setas para colapso
    - Identificar Persistência
        - Definir padrões de parada
-       - Implementar "volta filme"
+       - Implementar "volta filme" - OK
    - Codes
        - Grafo
-           - Finalizar o colapso
+           - Finalizar o colapso - OK
            - Criar o filme (passos)
            - Melhorar a estrutura das Faces (colocar acesso direto aos vértices para otimizar a UI)
        - Criar exemplos bons
@@ -31,9 +29,7 @@ Beginning of the studies of big-data analysis with graph theory and the evolutio
        - Limpar Código
 
 ## To Do:
-   - Desenhar o Grafo
    - Implementar Visual
-   - Finalizar colapso
    - Criar o Filme
    - Desenhar o filme
    - Limpar código
@@ -41,3 +37,7 @@ Beginning of the studies of big-data analysis with graph theory and the evolutio
 ## Verify
 
 ## Done
+   - Desenhar o Grafo
+   - Implement drawGraph() function
+   - Finalizar colapso
+   - Collapse per iteration (steps)

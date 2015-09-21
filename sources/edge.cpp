@@ -11,6 +11,7 @@ Edge::Edge () {
     this->degree = 0;
     this->destroyed = false;
     this->printed = false;
+    this->drawn = false;
 }
 
 Edge::Edge (Point *a, Point *b) {
@@ -19,6 +20,7 @@ Edge::Edge (Point *a, Point *b) {
     this->degree = 0;
     this->destroyed = false;
     this->printed = false;
+    this->drawn = false;
 }
 
 Edge::Edge (Point a, Point b) {
@@ -27,6 +29,7 @@ Edge::Edge (Point a, Point b) {
     this->degree = 0;
     this->destroyed = false;
     this->printed = false;
+    this->drawn = false;
 }
 
 Edge::~Edge() {

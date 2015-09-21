@@ -24,7 +24,7 @@ void UIHandler::init(int argc, char** argv, Graph *g) {
 	glutDisplayFunc(render);
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
-
+	cout << "step = " << step << endl;
 }
 
 void UIHandler::keyboard(unsigned char c, int x, int y){
@@ -35,11 +35,11 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 	if(c == 46 /* > */){
 		//drawFaces = !drawFaces;
 		step++;
+		cout << step << endl;
 		glutPostRedisplay();
 	}
 
-	if(c == 45 /* < */){
-		//drawFaces = !drawFaces;
+	if(c == 44 /* < */){
 		if(step > 0){
 			step--;
 		}
@@ -92,26 +92,33 @@ void UIHandler::drawFace(Face *f, int R, int G, int B){
 }
 
 void UIHandler::drawGraph(Graph* g){
+	cout << "Entered drawGraph" << endl;
 	int i = 0;
 	int j = 0;
-	int vSize = g->Points()->size();
+	//int vSize = g->Points()->size();
     int eSize = g->Edges()->size();
     int fSize = g->Faces()->size();
 
-    for(i = 0, j = 0, step = 0; (i < eSize || j < fSize) && (i+j) < step;) {
-        if (i < eSize && g->Edges()->at(eSize - i - 1).printed == false) {
+    for(i = 0; i < eSize; i++){
+    	g->Edges()->at(i).drawn = false;
+    }
 
-            g->Edges()->at(eSize - i - 1).printed = true;
+    for(i = 0, j = 0; (i < eSize || j < fSize) && (i+j) < step;) {
+    	cout << "Inside for with i = " << i << "and j = " << j << endl;
+        if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
+        	cout << "Drawing Edge" << endl;
+            g->Edges()->at(eSize - i - 1).drawn = true;
             drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
             i++;
         }
         while (
         (i+j) < step
         && j < fSize
-        && g->Faces()->at(j).E1()->printed
-        && g->Faces()->at(j).E2()->printed
-        && g->Faces()->at(j).E3()->printed
+        && g->Faces()->at(j).E1()->drawn
+        && g->Faces()->at(j).E2()->drawn
+        && g->Faces()->at(j).E3()->drawn
         ) {
+        	cout << "Drawing a face";
             g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
         	drawFace(&(g->Faces()->at(j)), 100, 150, 150);
             j++;
@@ -133,6 +140,7 @@ void UIHandler::render(void){
     //glEnable(GL_LINE_SMOOTH);
     drawEdge(1, 0.0, 12.0, 0.0, -12.0, 255, 255, 255);
     drawEdge(1, -12.0, 0.0, 12.0, 0.0, 255, 255, 255);
+    cout << "Rendering up to " << step << " steps"<< endl;
 	drawGraph(mainGraph);
 
     //Sample graph

@@ -19,6 +19,7 @@ class Edge {
 
     public:
         bool printed;
+        bool drawn;
         Edge (Point *, Point *);
         Edge (Point, Point);
         Edge ();
