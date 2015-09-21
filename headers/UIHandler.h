@@ -12,13 +12,15 @@ class UIHandler {
 
         static void mouse(int button, int state, int x, int y);
 
-        static void init(int argc, char** argv, Graph*);
+        static void init(int argc, char** argv, Graph*, int);
 
         static Graph* mainGraph;
 
         static bool drawFaces;
 
         static int step;
+
+        static int maxStep;
 
         static void setMainGraph(Graph *g);
         

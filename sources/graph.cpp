@@ -292,11 +292,54 @@ vector<Point*> Graph::verticesFromFace(Edge* e1, Edge* e2, Edge* e3) {
     return v3;
 }
 
+Point findEqualPoint(vector<Point>* v, Point p){
+    int i = 0;
+    for(i = 0; i < v->size(); i++){
+        if(v->at(i) == p){
+            return v->at(i);
+        }
+    }
+    return p;
+}
+
 
 Graph* Graph::copy(Graph *g1){
   Graph* temp = new Graph(g1->Index(), g1->Points(), g1->Edges(), g1->Faces());
   temp->CC(g1->CC());
   temp->HasConnected(g1->HasConnected());
+  return temp;
+}
+
+Graph* Graph::copy(Graph *g, int step){
+  //O que falta ser feito aqui:
+  //Quando damos um push_back uma cópia é feita
+  //Porém dentro de cada objeto copiado a referência continua para a propriedade do objeto original
+  //Por exemplo, copiamos uma Edge, mas os Points referenciados por ela continuam os mesmos da Edge original.
+  Graph* temp = new Graph(2);
+  int i, j;
+  int vSize = this->Points()->size();
+  int eSize = this->Edges()->size();
+  int fSize = this->Faces()->size();
+
+  temp->setPoints(g->Points());
+  for(i = 0, j = 0; (i < eSize || j < fSize) && (i+j) < step;) {
+        if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
+            g->Edges()->at(eSize - i - 1).drawn = true;
+            temp->Edges()->push_back(g->Edges()->at(eSize - i - 1));
+            i++;
+        }
+        while (
+        (i+j) < step
+        && j < fSize
+        && g->Faces()->at(j).E1()->drawn
+        && g->Faces()->at(j).E2()->drawn
+        && g->Faces()->at(j).E3()->drawn
+        ) {
+            g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
+            temp->Faces()->push_back(g->Faces()->at(j));
+            j++;
+        }
+    }
   return temp;
 }
 
@@ -463,51 +506,49 @@ void Graph::killCrit(Graph *g, int dimension) {
     }
 }
 
-void Graph::collapse(){
+void Graph::collapse(int step){
     Graph* g2;
     int i = 0 ;
     int j = 0;
-    g2 = copy(this);
+    g2 = copy(this, step);
+
+    //Reseting critical members
+    g2->critEdges = 0;
+    g2->critFaces = 0;
+
     livingMembers(g2, 2);
     while(g2->FreeFaces()->size() > 0) {
         j++;
-        printf("Still has Members: %lu\n", g2->FreeFaces()->size());
         i = 0;
         while(freeMembersLeft(g2, 2)) {
             i++;
-            printf(">>Still has faces\n");
             if (!kill(g2, 1)) {
-                printf(">>>>I'm removing it\n");
                 killCrit(g2, 2);
                 livingMembers(g2, 1);
             }
             else{
-                printf(">>>>SUCCESSFULLY KILLED\n");
             }
         }
     }
     livingMembers(g2, 1);
     while(g2->FreeEdges()->size() > 0) {
         j++;
-        printf("Still has Members: %lu\n", g2->FreeEdges()->size());
         i = 0;
         while(freeMembersLeft(g2, 1)) {
             i++;
-            printf(">>Still has edges\n");
             if (!kill(g2, 0)) {
-                printf(">>>>I'm removing it\n");
                 killCrit(g2, 1);
                 livingMembers(g2, 0);
             }
             else{
-                printf(">>>>SUCCESSFULLY KILLED\n");
             }
         }
     }
     cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
+    delete g2;
 }
 
-void Graph::calc(streambuf *backup, streambuf *out) {
+int Graph::calc(streambuf *backup, streambuf *out) {
 
     vector<float>
         point;
@@ -516,13 +557,13 @@ void Graph::calc(streambuf *backup, streambuf *out) {
         *radius;
 
     int
-        n, i, j, k, fSize, eSize, vSize;
+        n, i, j, k, fSize, eSize, vSize, totalSteps;
 
     float
         x, y,
         minx = 0, maxx = 0, miny = 0, maxy = 0;
 
-    ifstream infile("teste2");
+    ifstream infile("teste3");
 
     //cout.rdbuf(out);
 
@@ -633,10 +674,16 @@ void Graph::calc(streambuf *backup, streambuf *out) {
                 this->Faces()->at(j).E3()->Index());
             j++;
         }
+        
     }
 
-    this->collapse();
+    totalSteps = i + j;
+
+    for(i = 0; i < totalSteps; i++){
+        this->collapse(i);    
+    }
 
     delete radius;
 
+    return totalSteps;
 }

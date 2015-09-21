@@ -112,12 +112,14 @@ class Graph {
 
         static bool findPoint(vector<Point*>, int, Point*);
 
+        Point findEqualPoint(vector<Point>*, Point);
+
         bool findEdge(vector<Edge>, int, Edge);
 
         static vector<Point*> verticesFromFace(Edge* e1, Edge* e2, Edge* e3);
 
         //Collapse
-        void collapse();
+        void collapse(int);
 
         void livingMembers(Graph*, int);
 
@@ -130,7 +132,9 @@ class Graph {
         //MISC
         Graph* copy(Graph*);
 
-        void calc(streambuf *, streambuf *);
+        Graph* copy(Graph*, int);
+
+        int calc(streambuf *, streambuf *);
 
 };
 #endif

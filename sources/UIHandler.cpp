@@ -6,15 +6,17 @@
 using namespace std;
 
 Graph* UIHandler::mainGraph;
+int UIHandler::maxStep = 0;
 
 void UIHandler::setMainGraph(Graph *g) {
 	mainGraph = g;
 }
 
-void UIHandler::init(int argc, char** argv, Graph *g) {
+void UIHandler::init(int argc, char** argv, Graph *g, int max) {
 	//UIHandler::drawFaces = false;
 	printf("Press ESC or Right Click to quit.\n");
 	mainGraph = g;
+	maxStep = max;
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
@@ -24,7 +26,6 @@ void UIHandler::init(int argc, char** argv, Graph *g) {
 	glutDisplayFunc(render);
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
-	cout << "step = " << step << endl;
 }
 
 void UIHandler::keyboard(unsigned char c, int x, int y){
@@ -34,7 +35,9 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 	}
 	if(c == 46 /* > */){
 		//drawFaces = !drawFaces;
-		step++;
+		if(step < maxStep){
+			step++;
+		}
 		cout << step << endl;
 		glutPostRedisplay();
 	}
@@ -92,7 +95,6 @@ void UIHandler::drawFace(Face *f, int R, int G, int B){
 }
 
 void UIHandler::drawGraph(Graph* g){
-	cout << "Entered drawGraph" << endl;
 	int i = 0;
 	int j = 0;
 	//int vSize = g->Points()->size();
@@ -104,9 +106,7 @@ void UIHandler::drawGraph(Graph* g){
     }
 
     for(i = 0, j = 0; (i < eSize || j < fSize) && (i+j) < step;) {
-    	cout << "Inside for with i = " << i << "and j = " << j << endl;
         if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
-        	cout << "Drawing Edge" << endl;
             g->Edges()->at(eSize - i - 1).drawn = true;
             drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
             i++;
@@ -118,7 +118,6 @@ void UIHandler::drawGraph(Graph* g){
         && g->Faces()->at(j).E2()->drawn
         && g->Faces()->at(j).E3()->drawn
         ) {
-        	cout << "Drawing a face";
             g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
         	drawFace(&(g->Faces()->at(j)), 100, 150, 150);
             j++;

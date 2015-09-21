@@ -19,6 +19,8 @@ int UIHandler::step = 0;
 
 int main(int argc, char** argv) {
 
+    int maxSteps;
+
     Graph
         *graph;
 
@@ -36,9 +38,9 @@ int main(int argc, char** argv) {
     out = outfile.rdbuf();
 
     graph = new Graph(1);
-    graph->calc(backup, out);
+    maxSteps = graph->calc(backup, out);
 
-    UIHandler::init(argc, argv, graph);
+    UIHandler::init(argc, argv, graph, maxSteps);
     UIHandler::setMainGraph(graph);
     glutMainLoop();
 
