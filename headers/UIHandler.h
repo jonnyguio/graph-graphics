@@ -14,13 +14,11 @@ class UIHandler {
 
         static void init(int argc, char** argv);
 
-        static Graph mainGraph;
+        static Graph* mainGraph;
 
         static bool drawFaces;
 
         static int step;
-
-        static void setMainGraph(Graph g);
 
         static void drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B);
 

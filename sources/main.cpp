@@ -1,4 +1,4 @@
-//#include <GLUT/GLUT.h>
+#include <GLUT/GLUT.h>
 
 #include <fstream>
 #include <sstream>
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     graph->calc(backup, out);
 
     UIHandler::init(argc, argv);
-    UIHandler::setMainGraph(*graph);
+    UIHandler::mainGraph = graph;
     glutMainLoop();
 
     end = clock();

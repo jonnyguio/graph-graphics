@@ -47,10 +47,6 @@ void UIHandler::mouse(int button, int state, int x, int y){
 	}
 }
 
-void UIHandler::setMainGraph(Graph g){
-	UIHandler::mainGraph = g;
-}
-
 void UIHandler::drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B){
 	glLineWidth(width);
     glColor3ub( R, G, B );
@@ -91,15 +87,15 @@ void UIHandler::drawFace(Face *f, int R, int G, int B){
 void UIHandler::drawGraph(Graph* g){
 	int i = 0;
 	int j = 0;
-	int vSize = g->getVertices()->size();
-    int eSize = g->getEdges()->size();
+	int vSize = g->Points()->size();
+    int eSize = g->Edges()->size();
     int fSize = g->Faces()->size();
 
     for(i = 0, j = 0, step = 0; (i < eSize || j < fSize) && (i+j) < step;) {
-        if (i < eSize && g->getEdges()->at(eSize - i - 1).printed == false) {
+        if (i < eSize && g->Edges()->at(eSize - i - 1).printed == false) {
 
-            g->getEdges()->at(eSize - i - 1).printed = true;
-            drawEdge(2, &(g->getEdges()->at(eSize - i - 1)), 255, 255, 255);
+            g->Edges()->at(eSize - i - 1).printed = true;
+            drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
             i++;
         }
         while (
