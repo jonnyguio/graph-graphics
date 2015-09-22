@@ -35,6 +35,12 @@ Face::~Face() {
     //cout << "Destroying face: " << this->index << endl;
 }
 
+void Face::print() {
+    cout << "Index: " << this->index << "\t(" << this->e1->Index() << ", " << this->e2->Index() << ", " << this->e3->Index() << ") - Degree: " << this->degree << endl;
+    //this->a->print();
+    //this->b->print();
+}
+
 bool Face::operator==(const Face& f) {
     return (this->e1 == f.E1() && this->e2 == f.E2() && this->e3 == f.E3());
 }

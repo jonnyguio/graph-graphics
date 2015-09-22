@@ -162,9 +162,15 @@ void Graph::print() {
         cout << freePoints->at(i)->Index() << " ";
     }
 
-    cout << endl << endl << "Edges:" << endl;
+    cout << endl << "Edges:" << endl;
 
     for (vector<Edge>::iterator it = this->edges->begin(); it != this->edges->end(); ++it) {
+        (*it).print();
+    }
+
+    cout << endl << "Faces:" << endl;
+
+    for (vector<Face>::iterator it = this->faces->begin(); it != this->faces->end(); ++it) {
         (*it).print();
     }
 }
@@ -396,7 +402,6 @@ void Graph::livingMembers(Graph *g, int dimension) {
                     g->FreePoints()->push_back(&(g->Points()->at(i)));
                 }
             }
-            cout << "INside scoop" << g->FreePoints()->size() << endl;
             break;
         case 1:
             g->FreeEdges()->clear();

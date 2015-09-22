@@ -28,6 +28,8 @@ class Face {
 
         int Index();
 
+        void print(void);
+
         int Degree();
 
         bool Destroyed();
