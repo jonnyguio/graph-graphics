@@ -39,7 +39,9 @@ class Edge {
 
         void Destroy();
 
-        void SetDegree(int);
+        void Revive();
+
+        void Degree(int);
 
         int DegreePP();
 

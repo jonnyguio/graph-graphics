@@ -64,7 +64,11 @@ void Edge::Destroy(){
     this->destroyed = true;
 }
 
-void Edge::SetDegree(int value){
+void Edge::Revive(){
+    this->destroyed = false;
+}
+
+void Edge::Degree(int value){
     this->degree = value;
 }
 

@@ -42,7 +42,11 @@ void Point::Destroy(){
     this->destroyed = true;
 }
 
-void Point::SetDegree(int value){
+void Point::Revive(){
+    this->destroyed = false;
+}
+
+void Point::Degree(int value){
     this->degree = value;
 }
 

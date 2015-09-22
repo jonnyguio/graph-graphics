@@ -34,7 +34,9 @@ class Face {
 
         void Destroy();
 
-        void SetDegree(int);
+        void Revive();
+
+        void Degree(int);
 
         int DegreePP();
 
@@ -42,9 +44,15 @@ class Face {
 
         Edge* E1() const;
 
+        void E1(Edge*);
+
         Edge* E2() const;
 
+        void E2(Edge*);
+
         Edge* E3() const;
+
+        void E3(Edge*);
 
         bool formsTri(Edge *, Edge *, Edge *);
 

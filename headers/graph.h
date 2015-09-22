@@ -112,7 +112,9 @@ class Graph {
 
         static bool findPoint(vector<Point*>, int, Point*);
 
-        Point findEqualPoint(vector<Point>*, Point);
+        int findEqualPoint(vector<Point>*, Point*);
+
+        int findEqualEdge(vector<Edge>*, Edge*);
 
         bool findEdge(vector<Edge>, int, Edge);
 

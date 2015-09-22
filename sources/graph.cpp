@@ -156,6 +156,11 @@ void Graph::print() {
     {
         cout << (*it).Index() << " ";
     }
+    cout << endl << "Free Points: " << endl;
+    for (int i = 0; i < this->freePoints->size(); i++)
+    {
+        cout << freePoints->at(i)->Index() << " ";
+    }
 
     cout << endl << endl << "Edges:" << endl;
 
@@ -292,16 +297,27 @@ vector<Point*> Graph::verticesFromFace(Edge* e1, Edge* e2, Edge* e3) {
     return v3;
 }
 
-Point findEqualPoint(vector<Point>* v, Point p){
+int Graph::findEqualPoint(vector<Point>* v, Point* p){
     int i = 0;
     for(i = 0; i < v->size(); i++){
-        if(v->at(i) == p){
-            return v->at(i);
+        if(v->at(i) == *p){
+            return i;
         }
     }
-    return p;
+    cout << "Sorry, Point " << p->Index() << " isn't in the vector." << endl;
+    return -1;
 }
 
+int Graph::findEqualEdge(vector<Edge>* v, Edge* e){
+    int i = 0;
+    for(i = 0; i < v->size(); i++){
+        if(v->at(i) == *e){
+            return i;
+        }
+    }
+    cout << "Sorry, Edge " << e->Index() << " isn't in the vector." << endl;
+    return -1;
+}
 
 Graph* Graph::copy(Graph *g1){
   Graph* temp = new Graph(g1->Index(), g1->Points(), g1->Edges(), g1->Faces());
@@ -332,6 +348,8 @@ Graph* Graph::copy(Graph *g, int step){
             g->Edges()->at(eSize - i - 1).drawn = true;
             //cout << "Edges(" << eSize - i - 1 << ").drawn = " << g->Edges()->at(eSize - i - 1).drawn << endl;
             temp->Edges()->push_back(g->Edges()->at(eSize - i - 1));
+            temp->Edges()->back().A(&(temp->Points()->at(findEqualPoint(temp->Points(), g->Edges()->at(eSize - i - 1).A()))));
+            temp->Edges()->back().B(&(temp->Points()->at(findEqualPoint(temp->Points(), g->Edges()->at(eSize - i - 1).B()))));
             i++;
         }
         while (
@@ -342,9 +360,28 @@ Graph* Graph::copy(Graph *g, int step){
         && g->Faces()->at(j).E3()->drawn
         ) {
             g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
-            temp->Faces()->push_back(g->Faces()->at(j));
+            temp->Faces()->back().E1(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E1()))));
+            temp->Faces()->back().E2(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E2()))));
+            temp->Faces()->back().E3(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E3()))));
             j++;
         }
+    }
+    for(i = 0; i < temp->Points()->size(); i++){
+        temp->Points()->at(i).Degree(0);
+        temp->Points()->at(i).Revive();
+    }
+   for(i = 0; i < temp->Edges()->size(); i++){
+        temp->Edges()->at(i).Degree(0);
+        temp->Edges()->at(i).Revive();
+        temp->Edges()->at(i).A()->DegreePP();
+        temp->Edges()->at(i).B()->DegreePP();
+    }
+    for(i = 0; i < temp->Faces()->size(); i++){
+        temp->Faces()->at(i).Degree(1);
+        temp->Faces()->at(i).Revive();
+        temp->Faces()->at(i).E1()->DegreePP();
+        temp->Faces()->at(i).E2()->DegreePP();
+        temp->Faces()->at(i).E3()->DegreePP();
     }
   return temp;
 }
@@ -359,6 +396,7 @@ void Graph::livingMembers(Graph *g, int dimension) {
                     g->FreePoints()->push_back(&(g->Points()->at(i)));
                 }
             }
+            cout << "INside scoop" << g->FreePoints()->size() << endl;
             break;
         case 1:
             g->FreeEdges()->clear();
@@ -420,20 +458,25 @@ bool Graph::kill(Graph *g, int dimension) {
     switch(dimension) {
         case 0:
             for (int i = 0; i < g->FreeEdges()->size(); i++) {
+                cout << "called kill(0), vSize is now " << g->FreePoints()->size() << endl;
                 if(g->FreeEdges()->at(i)->A()->Degree() == 1 && !g->FreeEdges()->at(i)->A()->Destroyed()) {
+                    cout << "Actually kill Point " << g->FreeEdges()->at(i)->A()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
                     g->FreeEdges()->at(i)->A()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->DegreeMM();
                     g->FreeEdges()->at(i)->A()->Destroy();
                     g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(i)->A()), g->FreePoints()->end());
                     g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(i)), g->FreeEdges()->end());
+                    cout << "Ending vSize is " << g->FreePoints()->size() << endl;
                     return true;
                 }
                 else if(g->FreeEdges()->at(i)->B()->Degree() == 1 && !g->FreeEdges()->at(i)->B()->Destroyed()) {
+                    cout << "Actually kill Point " << g->FreeEdges()->at(i)->B()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
                     g->FreeEdges()->at(i)->A()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->Destroy();
                     g->FreePoints()->erase(remove(g->FreePoints()->begin(), g->FreePoints()->end(), g->FreeEdges()->at(i)->B()), g->FreePoints()->end());
                     g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(i)), g->FreeEdges()->end());
+                    cout << "Ending vSize is " << g->FreePoints()->size() << endl;
                     return true;
                 }
             }
@@ -518,12 +561,15 @@ void Graph::collapse(int step){
     int j = 0;
 
     g2 = copy(this, step);
+    cout << "Before:" << endl;
+    g2->print();
 
     //Reseting critical members
     g2->critEdges = 0;
     g2->critFaces = 0;
 
     livingMembers(g2, 2);
+    livingMembers(g2, 0);
     while(g2->FreeFaces()->size() > 0) {
         j++;
         i = 0;
@@ -533,24 +579,25 @@ void Graph::collapse(int step){
                 killCrit(g2, 2);
                 livingMembers(g2, 1);
             }
-            else{
-            }
         }
     }
     livingMembers(g2, 1);
     while(g2->FreeEdges()->size() > 0) {
         j++;
         i = 0;
+
         while(freeMembersLeft(g2, 1)) {
             i++;
+            livingMembers(g2, 0);
             if (!kill(g2, 0)) {
                 killCrit(g2, 1);
                 livingMembers(g2, 0);
             }
-            else{
-            }
         }
     }
+    livingMembers(g2, 0);
+
+    cout << "After" << endl;
     g2->print();
     cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
     //delete g2;
@@ -688,7 +735,7 @@ int Graph::calc(streambuf *backup, streambuf *out) {
     totalSteps = i + j;
 
     for(i = 0; i < totalSteps; i++){
-        cout << "this many times: " << i << endl;
+        cout << endl << endl << endl << "this many times: " << i << endl;
         this->collapse(i);    
     }
 

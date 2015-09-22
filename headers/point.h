@@ -27,7 +27,9 @@ class Point {
 
         void Destroy();
 
-        void SetDegree(int);
+        void Revive();
+
+        void Degree(int);
 
         int DegreePP();
 

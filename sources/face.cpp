@@ -55,7 +55,11 @@ void Face::Destroy(){
     this->destroyed = true;
 }
 
-void Face::SetDegree(int value){
+void Face::Revive(){
+    this->destroyed = false;
+}
+
+void Face::Degree(int value){
     this->degree = value;
 }
 
@@ -71,12 +75,24 @@ Edge* Face::E1() const{
     return this->e1;
 }
 
+void Face::E1(Edge *e) {
+    this->e1 = e;
+}
+
 Edge* Face::E2() const{
     return this->e2;
 }
 
+void Face::E2(Edge *e) {
+    this->e2 = e;
+}
+
 Edge* Face::E3() const{
     return this->e3;
+}
+
+void Face::E3(Edge *e) {
+    this->e3 = e;
 }
 
 int Face::Index() {
