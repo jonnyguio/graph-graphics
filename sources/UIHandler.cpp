@@ -6,10 +6,15 @@
 using namespace std;
 
 Graph* UIHandler::mainGraph;
+Graph* UIHandler::currentGraph;
 int UIHandler::maxStep = 0;
 
 void UIHandler::setMainGraph(Graph *g) {
 	mainGraph = g;
+}
+
+void UIHandler::setCurrentGraph(Graph *g){
+	currentGraph = g;
 }
 
 void UIHandler::init(int argc, char** argv, Graph *g, int max) {
@@ -39,6 +44,7 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 			step++;
 		}
 		cout << step << endl;
+		currentGraph = mainGraph->collapse(step);
 		glutPostRedisplay();
 	}
 
@@ -46,6 +52,7 @@ void UIHandler::keyboard(unsigned char c, int x, int y){
 		if(step > 0){
 			step--;
 		}
+		currentGraph = mainGraph->collapse(step);
 		glutPostRedisplay();
 	}
 
@@ -108,7 +115,12 @@ void UIHandler::drawGraph(Graph* g){
     for(i = 0, j = 0; (i < eSize || j < fSize) && (i+j) < step;) {
         if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
             g->Edges()->at(eSize - i - 1).drawn = true;
-            drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
+            if(g->Edges()->at(eSize - i - 1).IsCrit()){
+            	drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 97, 212, 111);
+            }
+            else{
+            	drawEdge(2, &(g->Edges()->at(eSize - i - 1)), 255, 255, 255);
+            }
             i++;
         }
         while (
@@ -119,7 +131,12 @@ void UIHandler::drawGraph(Graph* g){
         && g->Faces()->at(j).E3()->drawn
         ) {
             g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
-        	drawFace(&(g->Faces()->at(j)), 100, 150, 150);
+        	if(g->Faces()->at(j).IsCrit()){
+        		drawFace(&(g->Faces()->at(j)), 97, 172, 212);	
+        	}
+        	else{
+        		drawFace(&(g->Faces()->at(j)), 100, 150, 150);
+        	}
             j++;
         }
     }
@@ -140,7 +157,7 @@ void UIHandler::render(void){
     drawEdge(1, 0.0, 12.0, 0.0, -12.0, 255, 255, 255);
     drawEdge(1, -12.0, 0.0, 12.0, 0.0, 255, 255, 255);
     cout << "Rendering up to " << step << " steps"<< endl;
-	drawGraph(mainGraph);
+	drawGraph(currentGraph);
 
     //Sample graph
     //0 0

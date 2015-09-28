@@ -15,7 +15,8 @@ class Edge {
             degree;
         float
             dist;
-        bool destroyed;
+        bool destroyed,
+            isCrit;
 
     public:
         bool printed;
@@ -34,6 +35,10 @@ class Edge {
         float Dist(void) const;
 
         int Degree();
+
+        bool IsCrit();
+
+        void IsCrit(bool);
 
         bool Destroyed();
 

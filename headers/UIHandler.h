@@ -16,6 +16,8 @@ class UIHandler {
 
         static Graph* mainGraph;
 
+        static Graph* currentGraph;
+
         static bool drawFaces;
 
         static int step;
@@ -23,6 +25,8 @@ class UIHandler {
         static int maxStep;
 
         static void setMainGraph(Graph *g);
+
+        static void setCurrentGraph(Graph *g);
         
         static void drawEdge(float width, float x1, float y1, float x2, float y2, int R, int G, int B);
 

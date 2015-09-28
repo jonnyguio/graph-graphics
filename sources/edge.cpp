@@ -9,6 +9,7 @@ Edge::Edge () {
     this->a = NULL;
     this->b = NULL;
     this->degree = 0;
+    this->isCrit = false;
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
@@ -18,6 +19,7 @@ Edge::Edge (Point *a, Point *b) {
     this->a = a;
     this->b = b;
     this->degree = 0;
+    this->isCrit = false;
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
@@ -27,6 +29,7 @@ Edge::Edge (Point a, Point b) {
     this->a = &a;
     this->b = &b;
     this->degree = 0;
+    this->isCrit = false;
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
@@ -54,6 +57,14 @@ float Edge::Dist() const{
 
 int Edge::Degree(){
     return this->degree;
+}
+
+bool Edge::IsCrit(){
+    return this->isCrit;
+}
+
+void Edge::IsCrit(bool value){
+    this->isCrit = value;
 }
 
 bool Edge::Destroyed(){
@@ -101,7 +112,7 @@ bool Edge::operator==(const Edge& e) {
 }
 
 void Edge::print() {
-    cout << "Index: " << this->index << "\t(" << this->a->Index() << ", " << this->b->Index() << ") - Distance: " << this->dist << " - Degree: " << this->degree << endl;
+    cout << "Index: " << this->index << "\t(" << this->a->Index() << ", " << this->b->Index() << ") - Distance: " << this->dist << " - Degree: " << this->degree << " - isCrit: " << this->isCrit << endl;
     //this->a->print();
     //this->b->print();
 }

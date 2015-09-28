@@ -10,6 +10,7 @@ Face::Face () {
     this->e2 = NULL;
     this->e3 = NULL;
     this->degree = 1;
+    this->isCrit = false;
     this->destroyed = false;
 }
 
@@ -19,6 +20,7 @@ Face::Face (int index, Edge *e1, Edge *e2, Edge *e3) {
     this->e3 = e3;
     this->index = index;
     this->degree = 1;
+    this->isCrit = false;
     this->destroyed = false;
 }
 
@@ -28,6 +30,7 @@ Face::Face (int index, Edge e1, Edge e2, Edge e3) { // eita
     this->e3 = &e3;
     this->index = index;
     this->degree = 1;
+    this->isCrit = false;
     this->destroyed = false;
 }
 
@@ -36,7 +39,7 @@ Face::~Face() {
 }
 
 void Face::print() {
-    cout << "Index: " << this->index << "\t(" << this->e1->Index() << ", " << this->e2->Index() << ", " << this->e3->Index() << ") - Degree: " << this->degree << endl;
+    cout << "Index: " << this->index << "\t(" << this->e1->Index() << ", " << this->e2->Index() << ", " << this->e3->Index() << ") - Degree: " << this->degree << " - IsCrit: " << this->isCrit << endl;
     //this->a->print();
     //this->b->print();
 }
@@ -51,6 +54,14 @@ void Face::Index(int index) {
 
 int Face::Degree(){
     return this->degree;
+}
+
+bool Face::IsCrit(){
+    return this->isCrit;
+}
+
+void Face::IsCrit(bool value){
+    this->isCrit = value;
 }
 
 bool Face::Destroyed(){

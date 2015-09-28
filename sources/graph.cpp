@@ -349,7 +349,7 @@ Graph* Graph::copy(Graph *g, int step){
     g->Edges()->at(eSize - i - 1).drawn = false;
   }
 
-  for(i = 0, j = 0, counter = 0; counter < 3 && ((i < eSize || j < fSize) && (i+j) < step); counter++) {
+  for(i = 0, j = 0, counter = 0; ((i < eSize || j < fSize) && (i+j) < step); counter++) {
         if (i < eSize && g->Edges()->at(eSize - i - 1).drawn == false) {
             g->Edges()->at(eSize - i - 1).drawn = true;
             //cout << "Edges(" << eSize - i - 1 << ").drawn = " << g->Edges()->at(eSize - i - 1).drawn << endl;
@@ -365,13 +365,27 @@ Graph* Graph::copy(Graph *g, int step){
         && g->Faces()->at(j).E2()->drawn
         && g->Faces()->at(j).E3()->drawn
         ) {
-            g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
+            cout << "Face " << j << " is being copied" << " - " << g->Faces()->at(j).Index() << " New Index: " << fSize - g->Faces()->at(j).Index() << endl;
+            //g->Faces()->at(j).Index(fSize - g->Faces()->at(j).Index());
+            temp->Faces()->push_back(g->Faces()->at(j));
+            cout << "copied successfully" << endl;
             temp->Faces()->back().E1(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E1()))));
+            cout << "here" << endl;
             temp->Faces()->back().E2(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E2()))));
+            cout << "empaquei" << endl;
             temp->Faces()->back().E3(&(temp->Edges()->at(findEqualEdge(temp->Edges(), g->Faces()->at(j).E3()))));
+            cout << "parei aqui" << endl;
             j++;
         }
     }
+    
+        if(!(i < eSize || j < fSize)){
+            cout << "Stopo reason: vector size" << endl;
+        }
+        else if((i+j) >= step){
+            cout << "Stopo reason: step" << endl;   
+        }
+    cout << "final i = " << i << " final j = " << j << endl;
     for(i = 0; i < temp->Points()->size(); i++){
         temp->Points()->at(i).Degree(0);
         temp->Points()->at(i).Revive();
@@ -465,7 +479,7 @@ bool Graph::kill(Graph *g, int dimension) {
             for (int i = 0; i < g->FreeEdges()->size(); i++) {
                 cout << "called kill(0), vSize is now " << g->FreePoints()->size() << endl;
                 if(g->FreeEdges()->at(i)->A()->Degree() == 1 && !g->FreeEdges()->at(i)->A()->Destroyed()) {
-                    cout << "Actually kill Point " << g->FreeEdges()->at(i)->A()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
+                    cout << "Actually killed Point " << g->FreeEdges()->at(i)->A()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
                     g->FreeEdges()->at(i)->A()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->DegreeMM();
                     g->FreeEdges()->at(i)->A()->Destroy();
@@ -475,7 +489,7 @@ bool Graph::kill(Graph *g, int dimension) {
                     return true;
                 }
                 else if(g->FreeEdges()->at(i)->B()->Degree() == 1 && !g->FreeEdges()->at(i)->B()->Destroyed()) {
-                    cout << "Actually kill Point " << g->FreeEdges()->at(i)->B()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
+                    cout << "Actually killed Point " << g->FreeEdges()->at(i)->B()->Index() << " with Edge " << g->FreeEdges()->at(i)->Index() << endl;
                     g->FreeEdges()->at(i)->A()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->DegreeMM();
                     g->FreeEdges()->at(i)->B()->Destroy();
@@ -487,41 +501,48 @@ bool Graph::kill(Graph *g, int dimension) {
             }
             break;
         case 1:
-            for (int i = 0; i < g->FreeEdges()->size(); i++) {
-                if(g->FreeFaces()->at(0)->E1()->Degree() == 1 && !g->FreeFaces()->at(0)->E1()->Destroyed()){
+            cout << endl << "called kill(1), eSize is now " << g->FreeEdges()->size() << endl;
+            for (int i = 0; i < g->FreeFaces()->size(); i++) {
+                cout << "Face " << i << " -> Edge " << g->FreeFaces()->at(i)->E1()->Index() << " -> Degree: " << g->FreeFaces()->at(i)->E1()->Degree() << " -> Destroyed: " << g->FreeFaces()->at(0)->E1()->Destroyed() << endl;
+                if(g->FreeFaces()->at(i)->E1()->Degree() == 1 && !(g->FreeFaces()->at(0)->E1()->Destroyed())){
                     //cout << ">>> teste1" << endl;
-                    g->FreeFaces()->at(0)->E1()->DegreeMM();
-                    g->FreeFaces()->at(0)->E2()->DegreeMM();
-                    g->FreeFaces()->at(0)->E3()->DegreeMM();
-                    g->FreeFaces()->at(0)->E1()->Destroy();
-                    g->FreeFaces()->at(0)->E1()->A()->DegreeMM();
-                    g->FreeFaces()->at(0)->E1()->B()->DegreeMM();
+                    cout << "Actually killed Edge " << g->FreeFaces()->at(i)->E1()->Index() << " with Face " << g->FreeFaces()->at(i)->Index() << endl;
+                    g->FreeFaces()->at(i)->E1()->DegreeMM();
+                    g->FreeFaces()->at(i)->E2()->DegreeMM();
+                    g->FreeFaces()->at(i)->E3()->DegreeMM();
+                    g->FreeFaces()->at(i)->E1()->Destroy();
+                    g->FreeFaces()->at(i)->E1()->A()->DegreeMM();
+                    g->FreeFaces()->at(i)->E1()->B()->DegreeMM();
                     g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E1()), g->FreeEdges()->end());
                     g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                     return true;
                 }
                 else {
-                    if(g->FreeFaces()->at(0)->E2()->Degree() == 1 && !g->FreeFaces()->at(0)->E2()->Destroyed()){
+                    cout << "Face " << i << " -> Edge " << g->FreeFaces()->at(i)->E2()->Index() << " -> Degree: " << g->FreeFaces()->at(i)->E2()->Degree() << " -> Destroyed: " << g->FreeFaces()->at(0)->E2()->Destroyed() << endl;
+                    if(g->FreeFaces()->at(i)->E2()->Degree() == 1 && !(g->FreeFaces()->at(0)->E2()->Destroyed())){
                         //cout << ">>> teste2" << endl;
-                        g->FreeFaces()->at(0)->E1()->DegreeMM();
-                        g->FreeFaces()->at(0)->E2()->DegreeMM();
-                        g->FreeFaces()->at(0)->E3()->DegreeMM();
-                        g->FreeFaces()->at(0)->E2()->Destroy();
-                        g->FreeFaces()->at(0)->E2()->A()->DegreeMM();
-                        g->FreeFaces()->at(0)->E2()->B()->DegreeMM();
+                        cout << "Actually killed Edge " << g->FreeFaces()->at(i)->E2()->Index() << " with Face " << g->FreeFaces()->at(i)->Index() << endl;
+                        g->FreeFaces()->at(i)->E1()->DegreeMM();
+                        g->FreeFaces()->at(i)->E2()->DegreeMM();
+                        g->FreeFaces()->at(i)->E3()->DegreeMM();
+                        g->FreeFaces()->at(i)->E2()->Destroy();
+                        g->FreeFaces()->at(i)->E2()->A()->DegreeMM();
+                        g->FreeFaces()->at(i)->E2()->B()->DegreeMM();
                         g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E2()), g->FreeEdges()->end());
                         g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                         return true;
                     }
                     else {
-                        if(g->FreeFaces()->at(0)->E3()->Degree() == 1 && !g->FreeFaces()->at(0)->E3()->Destroyed()){
+                        cout << "Face " << i << " -> Edge " << g->FreeFaces()->at(i)->E3()->Index() << " -> Degree: " << g->FreeFaces()->at(i)->E3()->Degree() << " -> Destroyed: " << g->FreeFaces()->at(0)->E3()->Destroyed() << endl;
+                        if(g->FreeFaces()->at(i)->E3()->Degree() == 1 && !(g->FreeFaces()->at(0)->E3()->Destroyed())){
                             //cout << ">>> teste3 " << g->FreeEdges()->size() << endl;
-                            g->FreeFaces()->at(0)->E1()->DegreeMM();
-                            g->FreeFaces()->at(0)->E2()->DegreeMM();
-                            g->FreeFaces()->at(0)->E3()->DegreeMM();
-                            g->FreeFaces()->at(0)->E3()->Destroy();
-                            g->FreeFaces()->at(0)->E3()->A()->DegreeMM();
-                            g->FreeFaces()->at(0)->E3()->B()->DegreeMM();
+                            cout << "Actually killed Edge " << g->FreeFaces()->at(i)->E3()->Index() << " with Face " << g->FreeFaces()->at(i)->Index() << endl;
+                            g->FreeFaces()->at(i)->E1()->DegreeMM();
+                            g->FreeFaces()->at(i)->E2()->DegreeMM();
+                            g->FreeFaces()->at(i)->E3()->DegreeMM();
+                            g->FreeFaces()->at(i)->E3()->Destroy();
+                            g->FreeFaces()->at(i)->E3()->A()->DegreeMM();
+                            g->FreeFaces()->at(i)->E3()->B()->DegreeMM();
                             g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeFaces()->at(0)->E3()), g->FreeEdges()->end());
                             g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
                             return true;
@@ -541,12 +562,16 @@ bool Graph::kill(Graph *g, int dimension) {
 void Graph::killCrit(Graph *g, int dimension) {
     switch (dimension) {
         case 1:
+            cout << "Kill Crit 1: " << g->FreeEdges()->at(0)->Index() << " CritEdges = " << g->critEdges + 1 << endl;
+            g->FreeEdges()->at(0)->IsCrit(true);
             g->FreeEdges()->at(0)->A()->DegreeMM();
             g->FreeEdges()->at(0)->B()->DegreeMM();
             g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
             g->critEdges++;
-        break;
+            break;
         case 2:
+            cout << "Kill Crit 2: " << g->FreeFaces()->at(0)->Index() << " CritEdges = " << g->critFaces + 1 << endl;
+            g->FreeFaces()->at(0)->IsCrit(true);
             g->FreeFaces()->at(0)->E1()->DegreeMM();
             g->FreeFaces()->at(0)->E2()->DegreeMM();
             g->FreeFaces()->at(0)->E3()->DegreeMM();
@@ -556,16 +581,17 @@ void Graph::killCrit(Graph *g, int dimension) {
             //g->FreeFaces()->at(0)->E3()->print();
             g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
             g->critFaces++;
-        break;
+            break;
     }
 }
 
-void Graph::collapse(int step){
+Graph* Graph::collapse(int step){
     Graph* g2;
     int i = 0 ;
     int j = 0;
 
     g2 = copy(this, step);
+
     cout << "Before:" << endl;
     g2->print();
 
@@ -584,6 +610,8 @@ void Graph::collapse(int step){
                 killCrit(g2, 2);
                 livingMembers(g2, 1);
             }
+            cout << "Post killing Graph:" << endl << endl;
+            g2->print();
         }
     }
     livingMembers(g2, 1);
@@ -598,6 +626,8 @@ void Graph::collapse(int step){
                 killCrit(g2, 1);
                 livingMembers(g2, 0);
             }
+            cout << "Post killing Graph:" << endl << endl;
+            g2->print();
         }
     }
     livingMembers(g2, 0);
@@ -605,6 +635,7 @@ void Graph::collapse(int step){
     cout << "After" << endl;
     g2->print();
     cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
+    return g2;
     //delete g2;
 }
 
@@ -738,11 +769,13 @@ int Graph::calc(streambuf *backup, streambuf *out) {
     }
 
     totalSteps = i + j;
-
+    cout << totalSteps << endl;
+    /*
     for(i = 0; i < totalSteps; i++){
-        cout << endl << endl << endl << "this many times: " << i << endl;
+        cout << endl << endl << endl << "this many times: " << i << "--------------------------------------------------------"<< endl;
         this->collapse(i);    
     }
+    */
 
     delete radius;
 

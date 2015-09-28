@@ -9,11 +9,13 @@ Point::Point (int index, vector<float> input) {
     this->coordinates = input;
     this->index = index;
     this->degree = 0;
+    this->isCrit = true;
     this->destroyed = false;
 }
 
 Point::Point () {
     this->degree = 0;
+    this->isCrit = true;
     this->destroyed = false;
 }
 
@@ -32,6 +34,14 @@ int Point::Index() {
 
 int Point::Degree(){
     return this->degree;
+}
+
+bool Point::IsCrit(){
+    return this->isCrit;
+}
+
+void Point::IsCrit(bool value){
+    this->isCrit = value;
 }
 
 bool Point::Destroyed(){

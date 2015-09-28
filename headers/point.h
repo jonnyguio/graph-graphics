@@ -9,7 +9,8 @@ class Point {
         vector<float> coordinates;
         int index,
             degree;
-        bool destroyed;
+        bool destroyed,
+            isCrit;
 
     public:
         Point (int, vector<float>);
@@ -22,6 +23,10 @@ class Point {
         int Index();
 
         int Degree();
+
+        bool IsCrit();
+
+        void IsCrit(bool);
 
         bool Destroyed();
 

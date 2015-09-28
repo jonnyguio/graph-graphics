@@ -13,7 +13,8 @@ class Face {
             *e3;
         int index,
             degree;
-        bool destroyed;
+        bool destroyed,
+            isCrit;
 
     public:
         Face (int, Edge *, Edge *, Edge *);
@@ -31,6 +32,10 @@ class Face {
         void print(void);
 
         int Degree();
+
+        bool IsCrit();
+
+        void IsCrit(bool);
 
         bool Destroyed();
 

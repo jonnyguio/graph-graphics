@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
 
     UIHandler::init(argc, argv, graph, maxSteps);
     UIHandler::setMainGraph(graph);
+    UIHandler::setCurrentGraph(graph);
     glutMainLoop();
 
     end = clock();

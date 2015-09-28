@@ -121,7 +121,7 @@ class Graph {
         static vector<Point*> verticesFromFace(Edge* e1, Edge* e2, Edge* e3);
 
         //Collapse
-        void collapse(int);
+        Graph* collapse(int);
 
         void livingMembers(Graph*, int);
 
