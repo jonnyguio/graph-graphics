@@ -13,6 +13,8 @@ Edge::Edge () {
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Edge::Edge (Point *a, Point *b) {
@@ -23,6 +25,8 @@ Edge::Edge (Point *a, Point *b) {
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Edge::Edge (Point a, Point b) {
@@ -33,6 +37,8 @@ Edge::Edge (Point a, Point b) {
     this->destroyed = false;
     this->printed = false;
     this->drawn = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Edge::~Edge() {
@@ -77,6 +83,26 @@ void Edge::Destroy(){
 
 void Edge::Revive(){
     this->destroyed = false;
+}
+
+void Edge::Enable(){
+    this->enabled = true;
+}
+
+void Edge::Disable(){
+    this->enabled = false;
+}
+
+bool Edge::IsEnabled(){
+    return this->enabled;
+}
+
+void Edge::Rank(int value){
+    this->rank = value;
+}
+
+int Edge::Rank(){
+    return this->rank;
 }
 
 void Edge::Degree(int value){

@@ -12,10 +12,12 @@ class Edge {
             *a,
             *b;
         int index,
+            rank,
             degree;
         float
             dist;
         bool destroyed,
+            enabled,
             isCrit;
 
     public:
@@ -45,6 +47,16 @@ class Edge {
         void Destroy();
 
         void Revive();
+
+        void Enable();
+
+        void Disable();
+
+        bool IsEnabled();
+
+        void Rank(int);
+
+        int Rank();
 
         void Degree(int);
 

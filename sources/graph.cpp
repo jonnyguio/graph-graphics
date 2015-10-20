@@ -562,15 +562,15 @@ bool Graph::kill(Graph *g, int dimension) {
 void Graph::killCrit(Graph *g, int dimension) {
     switch (dimension) {
         case 1:
-            cout << "Kill Crit 1: " << g->FreeEdges()->at(0)->Index() << " CritEdges = " << g->critEdges + 1 << endl;
+            cout << "Kill Crit 1: " << g->FreeEdges()->at(0)->Index() << " CritEdges = " << g->ncritEdges + 1 << endl;
             g->FreeEdges()->at(0)->IsCrit(true);
             g->FreeEdges()->at(0)->A()->DegreeMM();
             g->FreeEdges()->at(0)->B()->DegreeMM();
             g->FreeEdges()->erase(remove(g->FreeEdges()->begin(), g->FreeEdges()->end(), g->FreeEdges()->at(0)), g->FreeEdges()->end());
-            g->critEdges++;
+            g->ncritEdges++;
             break;
         case 2:
-            cout << "Kill Crit 2: " << g->FreeFaces()->at(0)->Index() << " CritEdges = " << g->critFaces + 1 << endl;
+            cout << "Kill Crit 2: " << g->FreeFaces()->at(0)->Index() << " CritFaces = " << g->ncritFaces + 1 << endl;
             g->FreeFaces()->at(0)->IsCrit(true);
             g->FreeFaces()->at(0)->E1()->DegreeMM();
             g->FreeFaces()->at(0)->E2()->DegreeMM();
@@ -580,7 +580,7 @@ void Graph::killCrit(Graph *g, int dimension) {
             //g->FreeFaces()->at(0)->E2()->print();
             //g->FreeFaces()->at(0)->E3()->print();
             g->FreeFaces()->erase(remove(g->FreeFaces()->begin(), g->FreeFaces()->end(), g->FreeFaces()->at(0)), g->FreeFaces()->end());
-            g->critFaces++;
+            g->ncritFaces++;
             break;
     }
 }
@@ -596,8 +596,8 @@ Graph* Graph::collapse(int step){
     g2->print();
 
     //Reseting critical members
-    g2->critEdges = 0;
-    g2->critFaces = 0;
+    g2->ncritEdges = 0;
+    g2->ncritFaces = 0;
 
     livingMembers(g2, 2);
     livingMembers(g2, 0);
@@ -634,9 +634,48 @@ Graph* Graph::collapse(int step){
 
     cout << "After" << endl;
     g2->print();
-    cout << "Arestas críticas: " << g2->critEdges << "\t Faces críticas: " << g2->critFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
+    cout << "Arestas críticas: " << g2->ncritEdges << "\t Faces críticas: " << g2->ncritFaces << "\t Vértices críticos: " << g2->FreePoints()->size() << endl;
     return g2;
     //delete g2;
+}
+
+void Graph::dynamicCollapse(Graph* g){
+    g->resetGraph();
+
+}
+
+void resetGraph(int step){
+    int i = 0;
+    int j = 0;
+    int current = 0;
+    for(i = 0; i < this->Edges()->size(); i++){
+        this->Edges()->at(i).Disable();
+        this->Edges()->at(i).Revive();
+    }
+
+    for(j = 0; j < this->Faces()->size(); j++){
+        this->Faces()->at(j).Disable();
+        this->Faces()->at(j).Revive();
+    }
+
+    for(i = 0, j = 0, current = 0; (i < this->Edges()->size() + this->Faces()->size()); current++){
+        if(current <= step){
+            if(this->Edges()->at(i).Rank() <= current){
+                this->Edges()->at(i).Enable();
+                this->Edges()->at(i).Revive();
+                i++;
+            }
+            if(g->Faces()->at(j).Rank() <= current){
+                this->Faces()->at(j).Enable();
+                this->Faces()->at(j).Revive();
+                j++;
+            }
+        }
+        else{
+            break;
+        }
+        
+    }
 }
 
 int Graph::calc(streambuf *backup, streambuf *out) {
@@ -770,12 +809,12 @@ int Graph::calc(streambuf *backup, streambuf *out) {
 
     totalSteps = i + j;
     cout << totalSteps << endl;
-    /*
+    
     for(i = 0; i < totalSteps; i++){
         cout << endl << endl << endl << "this many times: " << i << "--------------------------------------------------------"<< endl;
         this->collapse(i);    
     }
-    */
+    
 
     delete radius;
 

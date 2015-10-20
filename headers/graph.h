@@ -20,11 +20,17 @@ class Graph {
         vector<Point*>
             *freePoints;
 
+        vector<Point*>
+            *critPoints;
+
         vector<Edge>
             *edges;
 
         vector<Edge*>
             *freeEdges;
+
+        vector<Edge*>
+            *critEdges;
 
         vector<Face>
             *faces;
@@ -32,11 +38,14 @@ class Graph {
         vector<Face*>
             *freeFaces;
 
+        vector<Face*>
+            *critFaces;
+
         bool
             hasConnected;
 
     public:
-        int critVertices = 0, critEdges = 0, critFaces = 0;
+        int ncritVertices = 0, ncritEdges = 0, ncritFaces = 0;
         Graph(int, vector<Point>, vector<Edge>);
 
         Graph(int, vector<Point>*, vector<Edge>*);
@@ -61,6 +70,8 @@ class Graph {
         vector<Edge>* Edges(void);
 
         vector<Edge*>* FreeEdges(void);
+
+        vector<Edge*>* critEdges(void);
 
         void addEdge(Edge*);
 
@@ -130,6 +141,12 @@ class Graph {
         bool kill(Graph*, int);
 
         void killCrit(Graph*, int);
+
+        //New Collapse Functions
+
+        void dynamicCollapse(Graph*);
+
+        void resetGraph(int);
 
         //MISC
         Graph* copy(Graph*);

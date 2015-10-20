@@ -12,6 +12,8 @@ Face::Face () {
     this->degree = 1;
     this->isCrit = false;
     this->destroyed = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Face::Face (int index, Edge *e1, Edge *e2, Edge *e3) {
@@ -22,6 +24,8 @@ Face::Face (int index, Edge *e1, Edge *e2, Edge *e3) {
     this->degree = 1;
     this->isCrit = false;
     this->destroyed = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Face::Face (int index, Edge e1, Edge e2, Edge e3) { // eita
@@ -32,6 +36,8 @@ Face::Face (int index, Edge e1, Edge e2, Edge e3) { // eita
     this->degree = 1;
     this->isCrit = false;
     this->destroyed = false;
+    this->enabled = false;
+    this->rank = -1;
 }
 
 Face::~Face() {
@@ -74,6 +80,26 @@ void Face::Destroy(){
 
 void Face::Revive(){
     this->destroyed = false;
+}
+
+void Face::Enable(){
+    this->enabled = true;
+}
+
+void Face::Disable(){
+    this->enabled = false;
+}
+
+bool Face::IsEnabled(){
+    return this->enabled;
+}
+
+void Face::Rank(int value){
+    this->rank = value;
+}
+
+int Face::Rank(){
+    return this->rank;
 }
 
 void Face::Degree(int value){

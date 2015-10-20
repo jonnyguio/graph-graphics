@@ -10,6 +10,7 @@ class Point {
         int index,
             degree;
         bool destroyed,
+            enabled,
             isCrit;
 
     public:
@@ -33,6 +34,12 @@ class Point {
         void Destroy();
 
         void Revive();
+
+        void Enable();
+
+        void Disable();
+
+        bool IsEnabled();
 
         void Degree(int);
 

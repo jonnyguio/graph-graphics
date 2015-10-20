@@ -12,8 +12,10 @@ class Face {
             *e2,
             *e3;
         int index,
+            rank,
             degree;
         bool destroyed,
+            enabled,
             isCrit;
 
     public:
@@ -42,6 +44,16 @@ class Face {
         void Destroy();
 
         void Revive();
+
+        void Enable();
+
+        void Disable();
+
+        bool IsEnabled();
+
+        void Rank(int);
+
+        int Rank();
 
         void Degree(int);
 

@@ -11,12 +11,14 @@ Point::Point (int index, vector<float> input) {
     this->degree = 0;
     this->isCrit = true;
     this->destroyed = false;
+    this->enabled = false;
 }
 
 Point::Point () {
     this->degree = 0;
     this->isCrit = true;
     this->destroyed = false;
+    this->enabled = false;
 }
 
 Point::~Point() {
@@ -54,6 +56,18 @@ void Point::Destroy(){
 
 void Point::Revive(){
     this->destroyed = false;
+}
+
+void Point::Enable(){
+    this->enabled = true;
+}
+
+void Point::Disable(){
+    this->enabled = false;
+}
+
+bool Point::IsEnabled(){
+    return this->enabled;
 }
 
 void Point::Degree(int value){
