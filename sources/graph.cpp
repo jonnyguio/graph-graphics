@@ -639,8 +639,30 @@ Graph* Graph::collapse(int step){
     //delete g2;
 }
 
-void Graph::dynamicCollapse(Graph* g){
-    g->resetGraph();
+void Graph::dynamicCollapse(int step){
+    int i = 0;
+    this->resetGraph(step);
+
+    //Finding Crit Faces
+    this->removeOldCrits(2);
+    this->reduceGraph(2);
+    for(i = 0; i < this->Faces()->size(); i++){
+        if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
+            this->lastEnabled(this->Faces())->IsCrit(true);
+            break;
+        }
+    }
+
+    //Finding Crit Edges
+    this->removeOldCrits(1);
+    this->reduceGraph(1);
+    for(i = 0; i < this->Edges()->size(); i++){
+        if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
+            this->lastEnabled(this->Edges())->IsCrit(true);
+            break;
+        }
+    }
+
 }
 
 void Graph::resetGraph(int step){
@@ -657,24 +679,58 @@ void Graph::resetGraph(int step){
         this->Faces()->at(j).Revive();
     }
 
-    for(i = 0, j = 0, current = 0; (i < this->Edges()->size() + this->Faces()->size()); current++){
-        if(current <= step){
-            if(this->Edges()->at(i).Rank() <= current){
-                this->Edges()->at(i).Enable();
-                this->Edges()->at(i).Revive();
-                i++;
-            }
-            if(this->Faces()->at(j).Rank() <= current){
-                this->Faces()->at(j).Enable();
-                this->Faces()->at(j).Revive();
-                j++;
-            }
+    for(i = 0, j = 0, current = 0;  current <= step (i < this->Edges()->size() + this->Faces()->size()); current++){
+       
+        if(this->Edges()->at(i).Rank() <= current){
+            this->Edges()->at(i).Enable();
+            this->Edges()->at(i).Revive();
+            i++;
         }
-        else{
+        if(this->Faces()->at(j).Rank() <= current){
+            this->Faces()->at(j).Enable();
+            this->Faces()->at(j).Revive();
+            j++;
+        }
+    }
+}
+
+void Graph::removeOldCrits(int dimension){
+    switch(dimension){
+        case 1:
+            for(int i = 0; i < this->CritEdges()->size(); i++){
+                this->CritEdges()->at(i)->Destroy();
+            }
+            break;
+        case 2:
+            for(int i = 0; i < this->CritFaces()->size(); i++){
+                this->CritFaces()->at(i)->Destroy();
+            }
+            break;
+        default:
+            printf("Uhhh something went wrong here...\n");
+            break;
+    }
+    
+}
+
+Edge* Graph::lastEnabled(vector<Edge> v){
+    for(int i = 0; i < v->size(); i++){
+        if(v->at(i).Enabled() == false){
+            i--;
             break;
         }
-
     }
+    return v->at(i-1);
+}
+
+Face* Graph::lastEnabled(vector<Face> v){
+    for(int i = 0; i < v->size(); i++){
+        if(v->at(i).Enabled() == false){
+            i--;
+            break;
+        }
+    }
+    return v->at(i-1);
 }
 
 int Graph::calc(streambuf *backup, streambuf *out) {

@@ -63,6 +63,8 @@ class Graph {
 
         vector<Point*>* FreePoints(void);
 
+        vector<Point*>* CritPoints(void);
+
         void addPoint(Point*);
 
         void setPoints(vector<Point>*);
@@ -80,6 +82,8 @@ class Graph {
         vector<Face>* Faces();
 
         vector<Face*>* FreeFaces(void);
+
+        vector<Face*>* CritFaces(void);
 
         void addFace(Face*);
 
