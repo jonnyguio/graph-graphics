@@ -71,7 +71,7 @@ class Graph {
 
         vector<Edge*>* FreeEdges(void);
 
-        vector<Edge*>* critEdges(void);
+        vector<Edge*>* CritEdges(void);
 
         void addEdge(Edge*);
 

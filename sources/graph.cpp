@@ -378,12 +378,12 @@ Graph* Graph::copy(Graph *g, int step){
             j++;
         }
     }
-    
+
         if(!(i < eSize || j < fSize)){
             cout << "Stopo reason: vector size" << endl;
         }
         else if((i+j) >= step){
-            cout << "Stopo reason: step" << endl;   
+            cout << "Stopo reason: step" << endl;
         }
     cout << "final i = " << i << " final j = " << j << endl;
     for(i = 0; i < temp->Points()->size(); i++){
@@ -641,10 +641,9 @@ Graph* Graph::collapse(int step){
 
 void Graph::dynamicCollapse(Graph* g){
     g->resetGraph();
-
 }
 
-void resetGraph(int step){
+void Graph::resetGraph(int step){
     int i = 0;
     int j = 0;
     int current = 0;
@@ -665,7 +664,7 @@ void resetGraph(int step){
                 this->Edges()->at(i).Revive();
                 i++;
             }
-            if(g->Faces()->at(j).Rank() <= current){
+            if(this->Faces()->at(j).Rank() <= current){
                 this->Faces()->at(j).Enable();
                 this->Faces()->at(j).Revive();
                 j++;
@@ -674,7 +673,7 @@ void resetGraph(int step){
         else{
             break;
         }
-        
+
     }
 }
 
@@ -804,17 +803,17 @@ int Graph::calc(streambuf *backup, streambuf *out) {
                 this->Faces()->at(j).E3()->Index());
             j++;
         }
-        
+
     }
 
     totalSteps = i + j;
     cout << totalSteps << endl;
-    
+
     for(i = 0; i < totalSteps; i++){
         cout << endl << endl << endl << "this many times: " << i << "--------------------------------------------------------"<< endl;
-        this->collapse(i);    
+        this->collapse(i);
     }
-    
+
 
     delete radius;
 
