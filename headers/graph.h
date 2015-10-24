@@ -148,9 +148,17 @@ class Graph {
 
         //New Collapse Functions
 
-        void dynamicCollapse(Graph*);
+        void collapseManager();
+
+        void dynamicCollapse(int, int);
 
         void resetGraph(int);
+
+        void removeOldCrits(int);
+
+        Edge* lastEnabled(vector<Edge> v);
+
+        Face* lastEnabled(vector<Face> v);
 
         //MISC
         Graph* copy(Graph*);

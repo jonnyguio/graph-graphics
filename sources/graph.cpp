@@ -100,6 +100,10 @@ vector<Edge*>* Graph::FreeEdges() {
     return this->freeEdges;
 }
 
+vector<Edge*>* Graph::CritEdges(){
+    return this->critEdges;
+}
+
 void Graph::setEdges(vector<Edge>* edges) {
     this->edges = edges;
 }
@@ -114,6 +118,10 @@ vector<Face>* Graph::Faces() {
 
 vector<Face*>* Graph::FreeFaces() {
     return this->freeFaces;
+}
+
+vector<Face*>* Graph::CritFaces(){
+    return this->critFaces;
 }
 
 void Graph::setFaces(vector<Face>* faces) {
@@ -639,28 +647,40 @@ Graph* Graph::collapse(int step){
     //delete g2;
 }
 
-void Graph::dynamicCollapse(int step){
-    int i = 0;
+void Graph::collapseManager(){
     this->resetGraph(step);
+    this->dynamicCollapse(step, 2);
+    this->dynamicCollapse(step, 1);
+}
 
-    //Finding Crit Faces
-    this->removeOldCrits(2);
-    this->reduceGraph(2);
-    for(i = 0; i < this->Faces()->size(); i++){
-        if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
-            this->lastEnabled(this->Faces())->IsCrit(true);
+void Graph::dynamicCollapse(int step, int dimension){
+    int i = 0;
+    switch(dimension){
+        case 1:
+            //Finding Crit Edges
+            this->removeOldCrits(1);
+            this->reduceGraph(1);
+            for(i = 0; i < this->Edges()->size(); i++){
+                if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
+                    this->lastEnabled(this->Edges())->IsCrit(true);
+                    break;
+                }
+            }
             break;
-        }
-    }
-
-    //Finding Crit Edges
-    this->removeOldCrits(1);
-    this->reduceGraph(1);
-    for(i = 0; i < this->Edges()->size(); i++){
-        if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
-            this->lastEnabled(this->Edges())->IsCrit(true);
+        case 2:  
+            //Finding Crit Faces
+            this->removeOldCrits(2);
+            this->reduceGraph(2);
+            for(i = 0; i < this->Faces()->size(); i++){
+                if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
+                    this->lastEnabled(this->Faces())->IsCrit(true);
+                    break;
+                }
+            }
+            this->reduceGraph(1);
             break;
-        }
+        default:
+            break;
     }
 
 }
@@ -713,6 +733,41 @@ void Graph::removeOldCrits(int dimension){
     
 }
 
+void Graph::reduceGraph(int dimension){
+    switch(){
+        case 1:
+            vector<Edge*> leaves;
+            vector<int> leavesPartners;
+            for(i = 0; i < this->Edges()->size(); i++){
+                if(this->Edges()->at(i).A()->Degree() == 1){
+                    leaves.push_back(&(this->Edges()->at(i)));
+                    leavesPartners.push_back(0);
+                }
+                if(this->Edges()->at(i).B()->Degree() == 1){
+                    leaves.push_back(&(this->Edges()->at(i)));
+                    leavesPartners.push_back(1);
+                }
+            }
+            for(i = 0; this->Edges->size(); i++){ //Upper bound
+                leaves->at(i).Destroy();
+                if(leavesPartners->at(i) == 0){
+                    leaves->at(i).B()->DegreeMM();
+                    leaves->at(i).A()->Destroy();
+                }
+                else{
+                    leaves->at(i).A()->DegreeMM();
+                    leaves->at(i).B()->Destroy();    
+                }
+                
+            }
+            break;
+        case 2:
+            break;
+        default:
+            break;
+    }
+}
+
 Edge* Graph::lastEnabled(vector<Edge> v){
     for(int i = 0; i < v->size(); i++){
         if(v->at(i).Enabled() == false){
@@ -720,7 +775,7 @@ Edge* Graph::lastEnabled(vector<Edge> v){
             break;
         }
     }
-    return v->at(i-1);
+    return v->at(i);
 }
 
 Face* Graph::lastEnabled(vector<Face> v){
@@ -730,7 +785,7 @@ Face* Graph::lastEnabled(vector<Face> v){
             break;
         }
     }
-    return v->at(i-1);
+    return v->at(i);
 }
 
 int Graph::calc(streambuf *backup, streambuf *out) {

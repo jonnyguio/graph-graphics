@@ -10,7 +10,8 @@ class Face {
         Edge
             *e1,
             *e2,
-            *e3;
+            *e3,
+            *partner;
         int index,
             rank,
             degree;
@@ -54,6 +55,14 @@ class Face {
         void Rank(int);
 
         int Rank();
+
+        Edge* Partner();
+
+        void Partner(Edge*);
+
+        Edge* CollapsedWith();
+
+        void CollapsedWith(Edge*);
 
         void Degree(int);
 
