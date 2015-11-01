@@ -647,7 +647,7 @@ Graph* Graph::collapse(int step){
     //delete g2;
 }
 
-void Graph::collapseManager(){
+void Graph::collapseManager(int step){
     this->resetGraph(step);
     this->dynamicCollapse(step, 2);
     this->dynamicCollapse(step, 1);
@@ -661,8 +661,8 @@ void Graph::dynamicCollapse(int step, int dimension){
             this->removeOldCrits(1);
             this->reduceGraph(1);
             for(i = 0; i < this->Edges()->size(); i++){
-                if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
-                    this->lastEnabled(this->Edges())->IsCrit(true);
+                if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).IsEnabled()){
+                    this->lastEnabled(*(this->Edges()))->IsCrit(true);
                     break;
                 }
             }
@@ -672,8 +672,8 @@ void Graph::dynamicCollapse(int step, int dimension){
             this->removeOldCrits(2);
             this->reduceGraph(2);
             for(i = 0; i < this->Faces()->size(); i++){
-                if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).Enabled()){
-                    this->lastEnabled(this->Faces())->IsCrit(true);
+                if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).IsEnabled()){
+                    this->lastEnabled(*(this->Faces()))->IsCrit(true);
                     break;
                 }
             }
@@ -699,7 +699,7 @@ void Graph::resetGraph(int step){
         this->Faces()->at(j).Revive();
     }
 
-    for(i = 0, j = 0, current = 0;  current <= step (i < this->Edges()->size() + this->Faces()->size()); current++){
+    for(i = 0, j = 0, current = 0;  current <= step && (i + j < this->Edges()->size() + this->Faces()->size()); current++){
        
         if(this->Edges()->at(i).Rank() <= current){
             this->Edges()->at(i).Enable();
@@ -733,35 +733,103 @@ void Graph::removeOldCrits(int dimension){
     
 }
 
-void Graph::reduceGraph(int dimension){
-    switch(){
+bool Graph::reduceGraph(int dimension){
+    bool addedSomething = false;
+    int i = 0;
+    switch(dimension){
         case 1:
             vector<Edge*> leaves;
             vector<int> leavesPartners;
-            for(i = 0; i < this->Edges()->size(); i++){
-                if(this->Edges()->at(i).A()->Degree() == 1){
-                    leaves.push_back(&(this->Edges()->at(i)));
-                    leavesPartners.push_back(0);
+            while(true){
+                addedSomething = false;
+                for(i = 0; i < this->Edges()->size(); i++){
+                    if(this->Edges()->at(i).A()->Degree() == 1){
+                        if(!addedSomething){
+                            addedSomething = true;
+                        }
+                        leaves.push_back(&(this->Edges()->at(i)));
+                        leavesPartners.push_back(0);
+                    }
+                    if(this->Edges()->at(i).B()->Degree() == 1){
+                        if(!addedSomething){
+                            addedSomething = true;
+                        }
+                        leaves.push_back(&(this->Edges()->at(i)));
+                        leavesPartners.push_back(1);
+                    }
                 }
-                if(this->Edges()->at(i).B()->Degree() == 1){
-                    leaves.push_back(&(this->Edges()->at(i)));
-                    leavesPartners.push_back(1);
+                if(!addedSomething){
+                    break;
+                }
+                for(i = 0; this->Edges()->size(); i++){ //Upper bound
+                    leaves.at(i)->Destroy();
+                    if(leavesPartners.at(i) == 0){
+                        leaves.at(i)->B()->DegreeMM();
+                        leaves.at(i)->A()->Destroy();
+                    }
+                    else{
+                        leaves.at(i)->A()->DegreeMM();
+                        leaves.at(i)->B()->Destroy();    
+                    }
+                    
                 }
             }
-            for(i = 0; this->Edges->size(); i++){ //Upper bound
-                leaves->at(i).Destroy();
-                if(leavesPartners->at(i) == 0){
-                    leaves->at(i).B()->DegreeMM();
-                    leaves->at(i).A()->Destroy();
+            for(i = 0; this->Edges()->size(); i++){ //Upper bound
+                if(this->Edges()->at(i).Destroyed() == false){
+                    return false;
                 }
-                else{
-                    leaves->at(i).A()->DegreeMM();
-                    leaves->at(i).B()->Destroy();    
-                }
-                
             }
-            break;
+            return true;
         case 2:
+            vector<Face*> leavesFace;
+            vector<int> leavesFacePartners;
+            while(true){
+                addedSomething = false;
+                for(i = 0; i < this->Faces()->size(); i++){
+                    if(this->Faces()->at(i).E1()->Degree() == 1){
+                        if(!addedSomething){
+                            addedSomething = true;
+                        }
+                        leavesFace.push_back(&(this->Faces()->at(i)));
+                        leavesFacePartners.push_back(0);
+                    }
+                    if(this->Edges()->at(i).E2()->Degree() == 1){
+                        if(!addedSomething){
+                            addedSomething = true;
+                        }
+                        leavesFace.push_back(&(this->Faces()->at(i)));
+                        leavesFacePartners.push_back(1);
+                    }
+                    if(this->Edges()->at(i).E3()->Degree() == 1){
+                        if(!addedSomething){
+                            addedSomething = true;
+                        }
+                        leavesFace.push_back(&(this->Faces()->at(i)));
+                        leavesFacePartners.push_back(2);
+                    }
+                }
+                if(!addedSomething){
+                    break;
+                }
+                for(i = 0; this->Edges()->size(); i++){ //Upper bound
+                    leavesFace.at(i)->Destroy();
+                    if(leavesFacePartners->at(i) == 0){
+                        leavesFace.at(i)->B()->DegreeMM();
+                        leavesFace.at(i)->A()->Destroy();
+                    }
+                    else{
+                        leavesFace.at(i)->A()->DegreeMM();
+                        leavesFace.at(i)->B()->Destroy();    
+                    }
+                    
+                }
+            }
+            for(i = 0; this->Edges()->size(); i++){ //Upper bound
+                if(this->Edges()->at(i).Destroyed() == false){
+                    return false;
+                }
+            }
+            return true;
             break;
         default:
             break;

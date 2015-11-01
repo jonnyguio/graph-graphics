@@ -10,7 +10,8 @@ class Edge {
     private:
         Point
             *a,
-            *b;
+            *b,
+            *partner;
         int index,
             rank,
             degree;
