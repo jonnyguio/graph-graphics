@@ -158,9 +158,9 @@ class Graph {
 
         bool reduceGraph(int);
 
-        Edge* lastEnabled(vector<Edge> v);
+        Edge* lastEnabled(vector<Edge>* v);
 
-        Face* lastEnabled(vector<Face> v);
+        Face* lastEnabled(vector<Face>* v);
 
         //MISC
         Graph* copy(Graph*);

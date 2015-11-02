@@ -662,7 +662,7 @@ void Graph::dynamicCollapse(int step, int dimension){
             this->reduceGraph(1);
             for(i = 0; i < this->Edges()->size(); i++){
                 if(this->Edges()->at(i).Destroyed() == false && this->Edges()->at(i).IsEnabled()){
-                    this->lastEnabled(*(this->Edges()))->IsCrit(true);
+                    this->lastEnabled(this->Edges())->IsCrit(true);
                     break;
                 }
             }
@@ -673,7 +673,7 @@ void Graph::dynamicCollapse(int step, int dimension){
             this->reduceGraph(2);
             for(i = 0; i < this->Faces()->size(); i++){
                 if(this->Faces()->at(i).Destroyed() == false && this->Edges()->at(i).IsEnabled()){
-                    this->lastEnabled(*(this->Faces()))->IsCrit(true);
+                    this->lastEnabled(this->Faces())->IsCrit(true);
                     break;
                 }
             }
@@ -736,10 +736,13 @@ void Graph::removeOldCrits(int dimension){
 bool Graph::reduceGraph(int dimension){
     bool addedSomething = false;
     int i = 0;
+    vector<Edge*> leaves;
+    vector<int> leavesPartners;
+    vector<Face*> leavesFace;
+    vector<int> leavesFacePartners;
     switch(dimension){
         case 1:
-            vector<Edge*> leaves;
-            vector<int> leavesPartners;
+            
             while(true){
                 addedSomething = false;
                 for(i = 0; i < this->Edges()->size(); i++){
@@ -781,8 +784,7 @@ bool Graph::reduceGraph(int dimension){
             }
             return true;
         case 2:
-            vector<Face*> leavesFace;
-            vector<int> leavesFacePartners;
+            
             while(true){
                 addedSomething = false;
                 for(i = 0; i < this->Faces()->size(); i++){
@@ -793,14 +795,14 @@ bool Graph::reduceGraph(int dimension){
                         leavesFace.push_back(&(this->Faces()->at(i)));
                         leavesFacePartners.push_back(0);
                     }
-                    if(this->Edges()->at(i).E2()->Degree() == 1){
+                    if(this->Faces()->at(i).E2()->Degree() == 1){
                         if(!addedSomething){
                             addedSomething = true;
                         }
                         leavesFace.push_back(&(this->Faces()->at(i)));
                         leavesFacePartners.push_back(1);
                     }
-                    if(this->Edges()->at(i).E3()->Degree() == 1){
+                    if(this->Faces()->at(i).E3()->Degree() == 1){
                         if(!addedSomething){
                             addedSomething = true;
                         }
@@ -811,49 +813,59 @@ bool Graph::reduceGraph(int dimension){
                 if(!addedSomething){
                     break;
                 }
-                for(i = 0; this->Edges()->size(); i++){ //Upper bound
+                for(i = 0; this->Faces()->size(); i++){ //Upper bound
                     leavesFace.at(i)->Destroy();
-                    if(leavesFacePartners->at(i) == 0){
-                        leavesFace.at(i)->B()->DegreeMM();
-                        leavesFace.at(i)->A()->Destroy();
+                    if(leavesFacePartners.at(i) == 0){
+                        leavesFace.at(i)->E2()->DegreeMM();
+                        leavesFace.at(i)->E3()->DegreeMM();
+                        leavesFace.at(i)->E1()->Destroy();
+                    }
+                    else if(leavesFacePartners.at(i) == 1){
+                        leavesFace.at(i)->E1()->DegreeMM();
+                        leavesFace.at(i)->E3()->DegreeMM();
+                        leavesFace.at(i)->E2()->Destroy();
                     }
                     else{
-                        leavesFace.at(i)->A()->DegreeMM();
-                        leavesFace.at(i)->B()->Destroy();    
+                        leavesFace.at(i)->E1()->DegreeMM();
+                        leavesFace.at(i)->E2()->DegreeMM();
+                        leavesFace.at(i)->E3()->Destroy();   
                     }
                     
                 }
             }
-            for(i = 0; this->Edges()->size(); i++){ //Upper bound
-                if(this->Edges()->at(i).Destroyed() == false){
+            for(i = 0; this->Faces()->size(); i++){ //Upper bound
+                if(this->Faces()->at(i).Destroyed() == false){
                     return false;
                 }
             }
             return true;
             break;
         default:
-            break;
+            cout << "Something went wrong" << endl;
+            return false;
     }
 }
 
-Edge* Graph::lastEnabled(vector<Edge> v){
-    for(int i = 0; i < v->size(); i++){
-        if(v->at(i).Enabled() == false){
+Edge* Graph::lastEnabled(vector<Edge>* v){
+    int i = 0;
+    for(i = 0; i < v->size(); i++){
+        if(v->at(i).IsEnabled() == false){
             i--;
             break;
         }
     }
-    return v->at(i);
+    return &(v->at(i));
 }
 
-Face* Graph::lastEnabled(vector<Face> v){
-    for(int i = 0; i < v->size(); i++){
-        if(v->at(i).Enabled() == false){
+Face* Graph::lastEnabled(vector<Face>* v){
+    int i = 0;
+    for(i = 0; i < v->size(); i++){
+        if(v->at(i).IsEnabled() == false){
             i--;
             break;
         }
     }
-    return v->at(i);
+    return &(v->at(i));
 }
 
 int Graph::calc(streambuf *backup, streambuf *out) {
